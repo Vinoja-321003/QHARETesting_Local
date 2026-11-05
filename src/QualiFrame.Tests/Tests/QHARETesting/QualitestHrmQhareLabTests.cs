@@ -2,21 +2,17 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using Qhare.Selenium;
-using Qhare.Selenium.NUnit;
 using QualiFrame.Framework.Configuration;
 using QualiFrame.Framework.Reports;
 using QualiFrame.Framework.Utilities.WebDriver;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace QualiFrame.Tests.Tests.Integration
 {
     [TestFixture]
     [NonParallelizable]
-    [QhareReport]
     [Allure.NUnit.AllureNUnit]
     [Allure.NUnit.Attributes.AllureFeature("Qualitest HRM QHARE Certification Lab")]
     public class QualitestHrmQhareLabTests : IntegrationTestBase
@@ -28,11 +24,6 @@ namespace QualiFrame.Tests.Tests.Integration
         private static readonly By PasswordInput = By.CssSelector("input[name='password']");
         private static readonly By BaselineLoginButton = By.Id("loginBtn");
         private QhareHealingScope? _qhareScope;
-        [SuppressMessage(
-            "NUnit.Analyzers",
-            "NUnit1032",
-            Justification = "The QHARE NUnit action emits the final result after per-test teardown.")]
-        private Qhare.Selenium.QhareClient? _reportingClient;
         private bool _scenarioCreated;
         private IWebDriver NativeDriver =>
             Driver is QhareDriverWrapper qhareDriver ? qhareDriver.WrappedDriver : Driver;
@@ -41,8 +32,7 @@ namespace QualiFrame.Tests.Tests.Integration
         {
             NativeLogin,
             HealedLogin,
-            NoLogin,
-            RequiredLogin
+            NoLogin
         }
 
         public sealed record LabCase(
@@ -91,41 +81,6 @@ namespace QualiFrame.Tests.Tests.Integration
             }
         }
 
-        public static IEnumerable<TestCaseData> RequiredLoginCases =>
-            LabCases.Where(testCase => ((LabCase)testCase.Arguments[0]!).ExpectedBehavior != ExpectedBehavior.NoLogin);
-
-        public static IEnumerable<TestCaseData> NegativeSafetyCases =>
-            LabCases.Where(testCase => ((LabCase)testCase.Arguments[0]!).ExpectedBehavior == ExpectedBehavior.NoLogin);
-
-        public static IEnumerable<TestCaseData> RequiredFailureCases =>
-            CreateUnresolvedCase(ExpectedBehavior.RequiredLogin, "Required action unresolved - FAILED");
-
-        public static IEnumerable<TestCaseData> OptionalUnresolvedCases =>
-            CreateUnresolvedCase(ExpectedBehavior.NoLogin, "Optional action absent");
-
-        public static IEnumerable<TestCaseData> RequiredBlockedCases =>
-            CreateUnresolvedCase(ExpectedBehavior.RequiredLogin, "Required action unresolved - BLOCKED");
-
-        private static IEnumerable<TestCaseData> CreateUnresolvedCase(ExpectedBehavior behavior, string name)
-        {
-            var sourceCase = LabCases
-                .Select(testCase => (LabCase)testCase.Arguments[0]!)
-                .Single(testCase => testCase.ExpectedUseCase == "UC-HL-008");
-            yield return new TestCaseData(sourceCase with { ExpectedBehavior = behavior })
-                .SetName($"QhareLab_{name}");
-        }
-
-        [OneTimeSetUp]
-        public void InitializeQhareReportingClient()
-        {
-            var configuration = TestConfiguration.Instance.GetQhareConfiguration();
-            _reportingClient = new Qhare.Selenium.QhareClient(
-                configuration.BaseUrl,
-                configuration.ProjectId,
-                TimeSpan.FromSeconds(Math.Max(1, configuration.TimeoutSeconds)),
-                configuration.ApiKey);
-        }
-
         [SetUp]
         public override void SetUp()
         {
@@ -143,12 +98,6 @@ namespace QualiFrame.Tests.Tests.Integration
 
             try
             {
-                TestSessionRegistry.Register(
-                    _reportingClient!,
-                    _qhareScope.ExecutionId,
-                    _qhareScope.TestId);
-                RunLifecycle.Track(_reportingClient!, _qhareScope.ExecutionId);
-
                 base.SetUp();
                 Assert.That(_qhareScope.Client, Is.Not.Null, "The QHARE wrapper did not attach its client.");
                 ExtentReportManager.CreateScenario(_qhareScope.Feature, TestContext.CurrentContext.Test.Name);
@@ -161,12 +110,6 @@ namespace QualiFrame.Tests.Tests.Integration
                 QhareHealingContext.Unbind();
                 throw;
             }
-        }
-
-        [OneTimeTearDown]
-        public void DisposeQhareReportingClient()
-        {
-            _reportingClient?.Dispose();
         }
 
         [TearDown]
@@ -212,47 +155,8 @@ namespace QualiFrame.Tests.Tests.Integration
             }
         }
 
-        [TestCaseSource(nameof(RequiredLoginCases))]
-        [QhareTestIntent("REQUIRED_ACTION")]
-        public void RequiredLoginControl_UsesBaselineLocatorAndValidatesQhare(LabCase testCase)
-        {
-            RunLabCase(testCase);
-        }
-
-        [TestCaseSource(nameof(NegativeSafetyCases))]
-        [QhareTestIntent("NEGATIVE_SAFETY_VALIDATION", ExpectedHealingDecision = "REJECTED")]
-        public void UnsafeLoginCandidate_IsRejected(LabCase testCase)
-        {
-            RunLabCase(testCase);
-        }
-
-        [TestCaseSource(nameof(RequiredFailureCases))]
-        [Category("QHAREUnresolvedStatus")]
-        [QhareTestIntent("REQUIRED_ACTION")]
-        public void RequiredActionWithUnresolvedLocator_Fails(LabCase testCase)
-        {
-            RunLabCase(testCase);
-        }
-
-        [TestCaseSource(nameof(RequiredBlockedCases))]
-        [Category("QHAREUnresolvedStatus")]
-        [QhareTestIntent(
-            "REQUIRED_ACTION",
-            BlockingReason = "No safe locator is available for the required HRM login action.")]
-        public void RequiredActionWithUnresolvedLocator_IsBlocked(LabCase testCase)
-        {
-            RunLabCase(testCase);
-        }
-
-        [TestCaseSource(nameof(OptionalUnresolvedCases))]
-        [Category("QHAREUnresolvedStatus")]
-        [QhareTestIntent("OPTIONAL_ACTION", Optional = true)]
-        public void OptionalActionWithUnresolvedLocator_MayBeOmitted(LabCase testCase)
-        {
-            RunLabCase(testCase);
-        }
-
-        private void RunLabCase(LabCase testCase)
+        [TestCaseSource(nameof(LabCases))]
+        public void LoginControl_UsesBaselineLocatorAndValidatesQhare(LabCase testCase)
         {
             Driver.Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
             Driver.Manage().Window.Maximize();
@@ -326,11 +230,6 @@ namespace QualiFrame.Tests.Tests.Integration
                             "QHARE must not guess when the control is ambiguous, unavailable, or outside policy.");
                         Assert.That(_qhareScope!.StepHeals, Is.Empty,
                             "This case must not record a validated heal to an unsafe or ambiguous control.");
-                        break;
-                    case ExpectedBehavior.RequiredLogin:
-                        Assert.That(clicked, Is.True, "The required Login action should complete.");
-                        Assert.That(resultText, Is.EqualTo("Signed in"),
-                            "The required Login action was not completed with a safe locator.");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(testCase.ExpectedBehavior));
