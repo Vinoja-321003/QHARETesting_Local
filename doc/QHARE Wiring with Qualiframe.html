@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QHARE Wiring with Qualiframe</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface-2: #243044;
+      --border: #334155;
+      --text: #e8eef6;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-2: #818cf8;
+      --success: #34d399;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --code-bg: #0b1220;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #312e81 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 1.5rem 2rem;
+    }
+
+    header .wrap { max-width: 960px; margin: 0 auto; }
+
+    .eyebrow {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+    }
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 44rem;
+      color: #cbd5e1;
+    }
+
+    nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: #121826;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    h2 {
+      margin: 2.4rem 0 0.8rem;
+      font-size: 1.4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    h3 {
+      margin: 1.6rem 0 0.6rem;
+      font-size: 1.08rem;
+      color: #c7d2fe;
+    }
+
+    p { color: #dbe4ee; }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 0.9rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0 1.4rem;
+    }
+
+    .callout.warning { border-left-color: var(--warn); }
+    .callout.success { border-left-color: var(--success); }
+
+    pre, code {
+      font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+    }
+
+    code.inline {
+      background: var(--surface-2);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.86em;
+      color: #a5f3fc;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.4rem;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--surface-2);
+      color: #e0e7ff;
+    }
+
+    tr:nth-child(even) td { background: #162033; }
+
+    ol.steps { padding-left: 1.2rem; }
+
+    ol.steps > li { margin: 0.45rem 0; }
+
+    .flow {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 1.2rem;
+      font-family: "Cascadia Code", "Consolas", monospace;
+      font-size: 0.78rem;
+      white-space: pre;
+      overflow-x: auto;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .path { color: var(--accent-2); }
+
+    footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">Qualiframe Selenium C# NUnit</p>
+      <h1>QHARE Wiring with Qualiframe</h1>
+      <p>
+        Step-by-step map of how QHARE (Qualiframe Adaptive Healing &amp; Reliability Engine)
+        is wired into this framework: config, exclusive provider switch, driver wrap,
+        find-element intercept, heal/recover, and Reqnroll telemetry flush.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#step-1">1. Config</a>
+    <a href="#step-2">2. Resolve</a>
+    <a href="#step-3">3. Scenario scope</a>
+    <a href="#step-4">4. Driver wrap</a>
+    <a href="#step-5">5. Native find</a>
+    <a href="#step-6">6. Heal</a>
+    <a href="#step-7">7. Recover</a>
+    <a href="#step-8">8. Telemetry</a>
+    <a href="#flow">End-to-end</a>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        QHARE is wired as an <strong>exclusive WebDriver wrapper</strong>. Page objects still
+        call Selenium <code class="inline">By</code> locators. The factory wraps the real browser
+        driver so a miss can go to the QHARE core. <strong>Healenium is never applied at the same time.</strong>
+      </p>
+      <div class="callout">
+        You do not change page objects, locators, waits, or step definitions to use QHARE.
+        The wiring is config + factory wrap + Reqnroll hooks. The QHARE process itself is external;
+        this repo only talks to <code class="inline">Qhare:BaseUrl</code>.
+      </div>
+    </section>
+
+    <section id="step-1">
+      <h2>1. Flip the exclusive provider</h2>
+      <p>
+        In <span class="path">src/QualiFrame.Framework/Configuration/appsettings.json</span>,
+        two blocks matter: <code class="inline">SelfHealing:Provider</code> and <code class="inline">Qhare</code>.
+      </p>
+<pre>{
+  "SelfHealing": {
+    "Provider": "Qhare"
+  },
+  "Qhare": {
+    "Enabled": true,
+    "BaseUrl": "http://localhost:3000",
+    "ProjectId": "qualiframe-selenium-c#",
+    "Mode": "AUTO_HEAL",
+    "TimeoutSeconds": 8,
+    "FailClosed": true,
+    "FrameworkVersion": "4.43",
+    "ApiKey": "(Bearer token if the core requires it)",
+    "LogHealingAttempts": true
+  }
+}</pre>
+      <ul>
+        <li><code class="inline">SelfHealing:Provider</code> is the switch: <code class="inline">Qhare</code>, <code class="inline">Healenium</code>, or <code class="inline">Off</code>.</li>
+        <li><code class="inline">Qhare:Enabled</code> must also be <code class="inline">true</code>, or the resolver treats QHARE as off.</li>
+        <li><code class="inline">TestConfiguration</code> maps those keys into <code class="inline">QhareConfiguration</code>.</li>
+        <li><code class="inline">ConfigurationValidator</code> requires a valid absolute <code class="inline">Qhare:BaseUrl</code> when the provider is Qhare.</li>
+        <li>If the BaseUrl key is missing, the code default is <code class="inline">http://localhost:8000</code>.</li>
+      </ul>
+    </section>
+
+    <section id="step-2">
+      <h2>2. Resolve which healer is active</h2>
+      <p>
+        <code class="inline">SelfHealingProviderResolver</code>
+        (<span class="path">src/QualiFrame.Framework/Configuration/SelfHealingProvider.cs</span>)
+        is the gate:
+      </p>
+      <ol class="steps">
+        <li>Empty provider → legacy fallback: Healenium if <code class="inline">Healenium:Enabled</code>.</li>
+        <li><code class="inline">Off</code> / <code class="inline">None</code> / <code class="inline">Disabled</code> → no wrapper.</li>
+        <li><code class="inline">Qhare</code> / <code class="inline">QHARE</code> → QHARE only if <code class="inline">Qhare:Enabled</code> is true.</li>
+        <li><code class="inline">Healenium</code> → Healenium only if <code class="inline">Healenium:Enabled</code> is true.</li>
+      </ol>
+      <div class="callout warning">
+        Both JSON blocks can have <code class="inline">"Enabled": true</code>. The factory still wraps
+        <strong>one</strong> driver. That is the exclusive-provider rule.
+      </div>
+    </section>
+
+    <section id="step-3">
+      <h2>3. Bind a per-scenario healing scope (before the browser)</h2>
+      <p>
+        <code class="inline">[BeforeScenario]</code> in
+        <span class="path">src/QualiFrame.Tests/Hooks/Hooks.cs</span>
+        binds an <code class="inline">AsyncLocal</code> scope <strong>before</strong> the driver is created:
+      </p>
+      <ul>
+        <li><code class="inline">TestId</code> = scenario title</li>
+        <li><code class="inline">ExecutionId</code> = new GUID</li>
+        <li><code class="inline">Feature</code> = feature title</li>
+      </ul>
+      <p>
+        That scope is how later heal requests know which test and step they belong to.
+        <code class="inline">[BeforeStep]</code> calls <code class="inline">BeginStep(step text)</code>,
+        which clears per-step caches (healed locators, failed locators, pending telemetry).
+      </p>
+    </section>
+
+    <section id="step-4">
+      <h2>4. Wrap the real WebDriver at create time</h2>
+      <p>
+        <code class="inline">[BeforeScenario]</code> then calls
+        <code class="inline">EnhancedWebDriverFactory.CreateDriver()</code> and
+        <code class="inline">SetCurrentDriver(driver)</code>.
+      </p>
+      <p>
+        After Chrome / Firefox / Edge (or a cloud driver) is created:
+      </p>
+<pre>var healer = SelfHealingProviderResolver.Resolve(_config);
+if (healer == SelfHealingProvider.Qhare)
+{
+    Logger.Information("Wrapping WebDriver with QHARE self-healing wrapper");
+    driver = new QhareDriverWrapper(driver, _config.GetQhareConfiguration());
+}</pre>
+      <p>
+        File: <span class="path">src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs</span>
+      </p>
+      <p>
+        <code class="inline">QhareDriverWrapper</code> is an <code class="inline">IWebDriver</code> facade around the real driver. Construction:
+      </p>
+      <ol class="steps">
+        <li>Builds a <code class="inline">QhareClient</code> (HTTP to <code class="inline">Qhare:BaseUrl</code>, Bearer <code class="inline">ApiKey</code> if set).</li>
+        <li>Calls <code class="inline">QhareHealingContext.AttachClient(_client)</code> so the scenario scope can flush telemetry later.</li>
+        <li>Logs core URL, project id, and mode.</li>
+      </ol>
+      <div class="callout success">
+        Page objects never see this. <code class="inline">BasePage.Driver</code> is
+        <code class="inline">EnhancedWebDriverFactory.GetDriver()</code>, which is already the wrapper.
+      </div>
+    </section>
+
+    <section id="step-5">
+      <h2>5. Native find first; heal only on a miss</h2>
+      <p>A typical call is:</p>
+<pre>BasePage.FindElement(By)
+  → WebDriverWait / ExpectedConditions
+  → wrapped IWebDriver.FindElement</pre>
+      <p><code class="inline">QhareDriverWrapper.FindElement</code> then:</p>
+      <ol class="steps">
+        <li>Calls <code class="inline">_baseDriver.FindElement(locator)</code> (real Selenium).</li>
+        <li>On success, returns immediately. QHARE is not involved.</li>
+        <li>On <code class="inline">NoSuchElementException</code>, enters <code class="inline">TryHeal</code>.</li>
+      </ol>
+      <p>Same idea for empty <code class="inline">FindElements</code>.</p>
+      <h3>Guards before calling core</h3>
+      <ul>
+        <li><code class="inline">Qhare:Enabled</code> false or <code class="inline">Mode</code> = <code class="inline">OFF</code> → rethrow the original miss.</li>
+        <li>Locator already in this step’s <code class="inline">FailedLocators</code> → skip (no retry storm).</li>
+        <li>Locator already in <code class="inline">HealedLocators</code> → reuse the healed <code class="inline">By</code> without another HTTP call.</li>
+      </ul>
+    </section>
+
+    <section id="step-6">
+      <h2>6. Ask QHARE core to heal</h2>
+      <p>On a real miss, the wrapper:</p>
+      <ol class="steps">
+        <li>Temporarily sets implicit wait to <strong>zero</strong> so healing retries do not sit on the implicit timeout.</li>
+        <li>Loads the project manifest once: <code class="inline">GET api/v1/projects/{ProjectId}/manifest?framework=selenium</code> (locator strategy order, e.g. id → css → xpath).</li>
+        <li>Posts <code class="inline">POST api/v1/heal</code> with project / execution / tenant, framework metadata, test id + current step, original locator, logical name, fingerprint, page URL/title, truncated DOM (max 250k chars), <code class="inline">action: find</code>, and <code class="inline">mode</code> from config.</li>
+      </ol>
+      <p>
+        <strong>Only status <code class="inline">HEALED</code> replaces the locator.</strong>
+        <code class="inline">QhareLocatorPicker</code> maps the candidate onto a Selenium
+        <code class="inline">By</code> using the manifest strategy order.
+      </p>
+      <p>Then it finds the healed locator on the <strong>real</strong> driver and checks <code class="inline">Displayed</code>:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Outcome</th>
+            <th>What happens</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Displayed</td>
+            <td>Return the element. Cache healed <code class="inline">By</code> for this step. Queue <code class="inline">heal.validated</code>.</td>
+          </tr>
+          <tr>
+            <td>Found but not displayed</td>
+            <td>Queue <code class="inline">heal.rejected</code>, remember as failed, rethrow original <code class="inline">NoSuchElementException</code>.</td>
+          </tr>
+          <tr>
+            <td><code class="inline">SUGGESTED</code> / <code class="inline">UNRESOLVED</code> / anything else</td>
+            <td>Do <strong>not</strong> swap the locator. Try recovery (next step).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout warning">
+        If core is down and <code class="inline">FailClosed</code> is true (the default), the original miss is rethrown.
+        Tests fail closed instead of inventing a locator.
+      </div>
+    </section>
+
+    <section id="step-7">
+      <h2>7. Optional recover path</h2>
+      <p>
+        If the heal was not <code class="inline">HEALED</code>, <code class="inline">TryRecover</code> posts
+        <code class="inline">POST api/v1/recover</code>. If status is <code class="inline">RECOVERED</code>, it runs
+        suggested actions (<code class="inline">wait</code>, <code class="inline">press_escape</code>,
+        <code class="inline">navigate_back</code>, <code class="inline">click</code>) and
+        <strong>retries the original locator</strong>.
+      </p>
+      <p>
+        Success queues <code class="inline">heal.validated</code> with policy
+        <code class="inline">RECOVERED_THEN_ORIGINAL</code>. Failure is ignored and the original miss is thrown.
+      </p>
+    </section>
+
+    <section id="step-8">
+      <h2>8. Flush telemetry after the Reqnroll step</h2>
+      <p>Heals are <strong>not</strong> sent immediately. They are queued on the scenario scope.</p>
+      <p>
+        <code class="inline">[AfterStep]</code> calls
+        <code class="inline">QhareHealingContext.CommitBoundStep(stepPassed)</code>:
+      </p>
+      <ul>
+        <li><code class="inline">heal.validated</code> is sent <strong>only if the step passed</strong>.</li>
+        <li><code class="inline">heal.failed</code> / <code class="inline">heal.rejected</code> are sent <strong>even if the step failed</strong>.</li>
+      </ul>
+      <p>
+        Flush goes to <code class="inline">POST api/v1/telemetry/events</code>.
+        <code class="inline">[AfterScenario]</code> unbinds the scope.
+      </p>
+      <div class="callout">
+        A healed locator that then causes a failing assertion is not reported as a validated heal.
+      </div>
+    </section>
+
+    <section id="flow">
+      <h2>End-to-end picture</h2>
+      <div class="flow">appsettings.json
+  SelfHealing:Provider = Qhare
+  Qhare:* (BaseUrl, ProjectId, Mode, ApiKey, FailClosed)
+        │
+        ▼
+TestConfiguration.GetQhareConfiguration()
+SelfHealingProviderResolver  →  Qhare  (exclusive vs Healenium)
+        │
+        ▼
+[BeforeScenario]  Bind QhareHealingScope (testId, executionId)
+EnhancedWebDriverFactory.CreateDriver()
+        │  wrap real Chrome/Firefox/Edge
+        ▼
+QhareDriverWrapper  +  QhareClient (HTTP to core)
+        │
+        ▼
+Page object  FindElement(By)  ──success──►  real element (QHARE idle)
+        │
+        └── NoSuchElement ──► POST /api/v1/heal
+                │
+                ├── HEALED + displayed  → use new By, queue heal.validated
+                ├── not HEALED          → POST /api/v1/recover, retry original
+                └── core down           → fail closed (original exception)
+        │
+        ▼
+[AfterStep]  CommitBoundStep  →  POST /api/v1/telemetry/events
+[AfterScenario]  Unbind</div>
+    </section>
+
+    <section id="files">
+      <h2>Key source files</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>File</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Config keys</td>
+            <td><span class="path">src/QualiFrame.Framework/Configuration/appsettings.json</span></td>
+          </tr>
+          <tr>
+            <td>Typed QHARE settings</td>
+            <td><span class="path">src/QualiFrame.Framework/Configuration/QhareConfiguration.cs</span></td>
+          </tr>
+          <tr>
+            <td>Config mapping</td>
+            <td><span class="path">src/QualiFrame.Framework/Configuration/TestConfiguration.cs</span></td>
+          </tr>
+          <tr>
+            <td>Exclusive provider switch</td>
+            <td><span class="path">src/QualiFrame.Framework/Configuration/SelfHealingProvider.cs</span></td>
+          </tr>
+          <tr>
+            <td>Startup validation</td>
+            <td><span class="path">src/QualiFrame.Framework/Configuration/ConfigurationValidator.cs</span></td>
+          </tr>
+          <tr>
+            <td>Driver wrap</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs</span></td>
+          </tr>
+          <tr>
+            <td>FindElement intercept + heal/recover</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/QhareDriverWrapper.cs</span></td>
+          </tr>
+          <tr>
+            <td>HTTP client (heal, recover, manifest, telemetry)</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/QhareClient.cs</span></td>
+          </tr>
+          <tr>
+            <td>Locator type mapping</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/QhareLocatorPicker.cs</span></td>
+          </tr>
+          <tr>
+            <td>DTOs</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/QhareModels.cs</span></td>
+          </tr>
+          <tr>
+            <td>Per-scenario scope + telemetry flush rules</td>
+            <td><span class="path">src/QualiFrame.Framework/Utilities/WebDriver/QhareHealingContext.cs</span></td>
+          </tr>
+          <tr>
+            <td>Reqnroll bind / begin step / commit / unbind</td>
+            <td><span class="path">src/QualiFrame.Tests/Hooks/Hooks.cs</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    Qualiframe Selenium C# NUnit — QHARE wiring reference. Generated from the framework source and the
+    exclusive self-healing provider design (Healenium or QHARE, never both).
+  </footer>
+</body>
+</html>

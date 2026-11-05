@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(QualiFrameTfms)</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>QualiFrame.Runner.Core</RootNamespace>
+    <Description>Lightweight dotnet test CLI orchestration for QualiFrame (no framework or test assembly dependencies).</Description>
+    <!-- CLI host: Debug-only output keeps bin/ small (see Directory.Build.props). -->
+    <Configurations>Debug</Configurations>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(QualiFrameMsExtConfigVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(QualiFrameMsExtConfigVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(QualiFrameMsExtConfigVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\QualiFrame.Framework\Configuration\appsettings.json" Link="Configuration\appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

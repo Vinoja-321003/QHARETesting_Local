@@ -1,0 +1,57 @@
+# Azure DevOps pipeline — mirrors .github/workflows/ci.yml via scripts/ci-build-test.sh
+trigger:
+  branches:
+    include:
+      - main
+      - master
+      - develop
+
+pr:
+  branches:
+    include:
+      - main
+      - master
+      - develop
+
+variables:
+  BUILD_CONFIGURATION: Release
+  TEST_PROJECT: src/QualiFrame.Tests/QualiFrame.Tests.csproj
+  TEST_RESULTS_TRX: $(Agent.TempDirectory)/test-results.trx
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+
+  - bash: bash scripts/ci-validate-manifest.sh
+    displayName: Validate FRAMEWORK_MANIFEST.json
+
+  - task: UseDotNet@2
+    displayName: Use .NET SDK (global.json)
+    inputs:
+      packageType: sdk
+      useGlobalJson: true
+
+  - bash: bash scripts/ci-build-test.sh
+    displayName: Build and test
+    env:
+      BUILD_CONFIGURATION: $(BUILD_CONFIGURATION)
+      TEST_PROJECT: $(TEST_PROJECT)
+      TEST_RESULTS_TRX: $(TEST_RESULTS_TRX)
+
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    condition: always()
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: '**/*.trx'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish coverage output
+    condition: always()
+    inputs:
+      targetPath: 'src/QualiFrame.Tests/TestResults'
+      artifact: coverage
+      publishLocation: pipeline

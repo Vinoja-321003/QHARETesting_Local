@@ -1,0 +1,24 @@
+{
+  "BaseFilePath": "Data/FileValidation/BasePDF.pdf",
+  "ExpectedFolders": [
+    "Data/FileValidation/ExpectedPdfs"
+  ],
+  "ExpectedFilePatterns": [
+    "*.pdf"
+  ],
+  "MaxDocuments": 250,
+  "Categories": {
+    "EnableComparisonSummary": true,
+    "EnableTextValidation": true,
+    "EnableImageValidation": false,
+    "EnableTableValidation": false,
+    "EnableFontValidation": false,
+    "EnableSignatureValidation": false
+  },
+  "Tolerances": {
+    "LayoutTolerancePoints": 2.0,
+    "ImageDiffTolerance": 0.01,
+    "TextIgnorePatterns": []
+  }
+}
+

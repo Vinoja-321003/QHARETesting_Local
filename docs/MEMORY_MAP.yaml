@@ -1,0 +1,169 @@
+# Capability → implementation anchors for RAG / MCP chunk routing.
+# Paths relative to repository root unless noted.
+schema_version: "1.0"
+repo: qualiframe-selenium-csharp-nunit
+
+layers:
+  framework_library:
+    path: src/QualiFrame.Framework
+    rule: "Generic abstractions only; no application-specific page objects."
+  test_implementation:
+    path: src/QualiFrame.Tests
+    rule: "Application POs, features, steps, hooks, and executable tests."
+
+capabilities:
+  web_pom:
+    summary: "Component-based POM, fluent element wrapper, visual compare."
+    primary_types:
+      - QualiFrame.Framework.PageBases.BasePage
+      - QualiFrame.Framework.PageBases.ComponentPage
+      - QualiFrame.Tests.PageObjects.WebPage
+    paths:
+      - src/QualiFrame.Framework/PageBases
+      - src/QualiFrame.Tests/PageObjects
+      - src/QualiFrame.Framework/Web/Components
+      - src/QualiFrame.Framework/Web/Elements
+      - src/QualiFrame.Framework/Web/Visual
+  webdriver_factory:
+    summary: "Driver creation, pooling, health checks, Healenium wrap, opt-in video frames."
+    primary_types:
+      - QualiFrame.Framework.Utilities.WebDriver.EnhancedWebDriverFactory
+      - QualiFrame.Framework.Utilities.WebDriver.DriverPool
+      - QualiFrame.Framework.Utilities.WebDriver.DriverPoolManager
+      - QualiFrame.Framework.Utilities.WebDriver.HealeniumDriverWrapper
+      - QualiFrame.Framework.Utilities.WebDriver.VideoRecordingManager
+    config_keys: [TestConfiguration, Healenium, DriverPool]
+    paths:
+      - src/QualiFrame.Framework/Utilities/WebDriver
+  bdd_reqnroll:
+    summary: "Gherkin features, bindings, BoDi DI, hooks."
+    primary_types:
+      - QualiFrame.Tests.Hooks.Hooks
+    paths:
+      - src/QualiFrame.Tests/Features
+      - src/QualiFrame.Tests/StepDefinitions
+      - src/QualiFrame.Tests/Hooks
+  modular_nunit:
+    summary: "Non-BDD tests via template-method base."
+    primary_types:
+      - QualiFrame.Framework.Core.ModularTestCase
+    paths:
+      - src/QualiFrame.Framework/Core/ModularTestCase.cs
+      - src/QualiFrame.Tests/Tests
+  api_rest_graphql:
+    summary: "REST client, GraphQL builder, performance monitor."
+    primary_types:
+      - QualiFrame.Framework.API.EnhancedApiClient
+      - QualiFrame.Framework.API.GraphQL.GraphQLClient
+      - QualiFrame.Framework.API.GraphQL.QueryBuilder
+    paths:
+      - src/QualiFrame.Framework/API
+  mocking_virtualization:
+    summary: "WireMock, OpenAPI stubs, hybrid UI/API."
+    project: src/QualiFrame.Mocking
+    integration_tests:
+      - src/QualiFrame.Tests/Tests/Integration/Mocking
+    filter: Category=Mocking
+    paths:
+      - src/QualiFrame.Mocking
+  pdf_engine:
+    summary: "PdfPig-based engine, validation pipeline, DI registration."
+    project: src/QualiFrame.Pdf.Core.Engine
+    primary_types:
+      - PdfValidationEngine
+      - AddQualiFramePdfValidationEngine
+    paths:
+      - src/QualiFrame.Pdf.Core.Engine
+      - src/QualiFrame.Tests/Tests/PDFTests
+  reporting:
+    summary: "Extent, Allure, unified facade; AsyncLocal thread isolation."
+    primary_types:
+      - QualiFrame.Framework.Reports.ExtentReportManager
+      - QualiFrame.Framework.Reporting.EnhancedAllureReporter
+      - QualiFrame.Framework.Reporting.UnifiedReportingService
+      - QualiFrame.Framework.Reports.ReqnrollExtentAdapter
+    config_keys: [Reporting, ALLURE_RESULTS_DIRECTORY]
+    artifact_dirs:
+      - Results/AllureResults
+      - Results/Reports
+      - Results/Screenshots
+      - Results/Videos
+    paths:
+      - src/QualiFrame.Framework/Reporting
+      - src/QualiFrame.Framework/Reports
+  configuration:
+    summary: "JSON appsettings, properties reader, validation."
+    primary_types:
+      - QualiFrame.Framework.Configuration.TestConfiguration
+      - QualiFrame.Framework.Configuration.ConfigurationValidator
+    paths:
+      - src/QualiFrame.Framework/Configuration
+      - src/QualiFrame.Tests/Configuration
+  data_repositories:
+    summary: "Excel, CSV, JSON, and opt-in SQL via factory (default remains Excel)."
+    primary_types:
+      - QualiFrame.Framework.Data.Repositories.DataRepositoryFactory
+      - QualiFrame.Framework.Data.Repositories.SqlDataRepository
+    paths:
+      - src/QualiFrame.Framework/Data/Repositories
+  security_secrets:
+    summary: "AES + Azure Key Vault."
+    paths:
+      - src/QualiFrame.Framework/Security
+  orchestration_analytics:
+    summary: "Dependency graph, metrics, ML test selection."
+    paths:
+      - src/QualiFrame.Framework/Orchestration
+      - src/QualiFrame.Framework/Analytics
+  mobile:
+    summary: "Appium wrappers, gestures."
+    paths:
+      - src/QualiFrame.Framework/Mobile
+  desktop_flaui:
+    summary: "FlaUI desktop session, pages, BDD under Features/Desktop.feature. Calculator is the shipped sample; login is a template."
+    config_keys: [Desktop:AppId, Desktop:AutomationType, Desktop:LaunchMode, Desktop:WindowTitle]
+    filter: Category=Desktop
+    sample_filter: Category=Calculator
+    primary_types:
+      - QualiFrame.Framework.Desktop.Drivers.DesktopSessionFactory
+      - QualiFrame.Framework.Desktop.Pages.CalculatorPage
+    paths:
+      - src/QualiFrame.Framework/Desktop
+      - src/QualiFrame.Tests/Features/Desktop.feature
+      - src/QualiFrame.Tests/StepDefinitions/DesktopSteps.cs
+      - src/QualiFrame.Tests/StepDefinitions/CalculatorSteps.cs
+      - src/QualiFrame.Tests/Hooks/DesktopHooks.cs
+      - docs/guides/DESKTOP_AUTOMATION.md
+  runner_cli:
+    summary: "CLI host + lightweight dotnet test orchestration."
+    primary_types:
+      - QualiFrame.Runner.Core.TestRunner
+      - QualiFrame.Runner.Core.TestRunnerOptions
+    paths:
+      - src/QualiFrame.Runner/Program.cs
+      - src/QualiFrame.Runner.Core
+
+documentation:
+  guides: docs/guides/README.md
+  agent_context: docs/context/README.md
+  archive: docs/archive/
+  manifest: FRAMEWORK_MANIFEST.json
+  manifest_schema: FRAMEWORK_MANIFEST.schema.json
+  manifest_guide: docs/FRAMEWORK_MANIFEST_GUIDE.md
+
+execution:
+  preferred_test_commands:
+    - dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj
+    - dotnet test Qualiframe-CSharp-NUnit_v3.0-TestsOnly.slnf
+    - dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj --filter "Category=Calculator"
+    - dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj --filter "Category=Desktop"
+  runner_command: dotnet run --project src/QualiFrame.Runner/QualiFrame.Runner.csproj
+  ci_script: scripts/ci-build-test.sh
+  clean_script: scripts/clean.sh
+  manifest_validate: scripts/validate-framework-manifest.py
+  ci_manifest_validate: scripts/ci-validate-manifest.sh
+  ci_workflows:
+    - .github/workflows/ci.yml
+    - azure-pipelines.yml
+    - .gitlab-ci.yml
+  jenkins: Jenkinsfile

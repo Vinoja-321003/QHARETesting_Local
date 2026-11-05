@@ -1,0 +1,16 @@
+{
+  "BaseFilePath": "Data/FileValidation/BasePDF.pdf",
+  "CompareFilePath": "Data/FileValidation/ComparePDF.pdf",
+  "Comparisons": {
+    "EnableFileCompare": true,
+    "EnableTextCompare": true,
+    "EnableTableCompare": true,
+    "EnableImageCompare": true,
+    "EnableHeaderFooterCompare": true,
+    "EnableFileSizeCompare": true,
+    "EnableFormattingCompare": true,
+    "MaxSizeDifferenceBytes": 1024,
+    "ImageDiffTolerance": 0.01,
+    "LayoutTolerancePoints": 2.0
+  }
+}

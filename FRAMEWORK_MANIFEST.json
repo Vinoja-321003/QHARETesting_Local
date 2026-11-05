@@ -1,0 +1,4288 @@
+{
+  "$schema": "./FRAMEWORK_MANIFEST.schema.json",
+  "manifest": {
+    "schemaVersion": "1.0.0",
+    "manifestVersion": "2.0.11",
+    "frameworkVersion": "3.1.1",
+    "generatedAt": "2026-09-11T18:00:00Z",
+    "generationMode": "incremental-update",
+    "repositoryCommit": "f7cba168aba17360413ded5a2cf8c2193ed39ce5",
+    "validationStatus": "valid",
+    "notes": [
+      "Knowledge-model replacement of the previous package-inventory JSON (no prior schema file).",
+      "Curated project roles, NuGet versions, and removed-dependency notes were preserved.",
+      "Schema 1.0.0 is the first formal FRAMEWORK_MANIFEST.schema.json.",
+      "2.0.1: SQL repository, nested ParallelExecution keys, opt-in video capture, GitLab CI aligned to ci-build-test.sh.",
+      "2.0.2: Removed stale healenium/ docker-compose paths (folder not in repo); added CalculatorSteps, GraphQL/Extent reusable components, SQL/API config keys, newsroom binding gap, and missing major-capability traceability. Project Version attributes remain 3.1.0.",
+      "2.0.3: Newsroom bindings + config credentials; GraphQL example; AppiumDriverFactory and WEBVIEW switch; opt-in gRPC/WebSocket/Kafka/OTel/S3/Blob wrappers; Bogus/AutoFixture test factory; ZAP IsAvailable gating.",
+      "2.0.4: Packable csproj Version 3.1.1; Skills.md reconciled to csproj; leftover Applitools config removed; optional healenium/ Docker Compose stack restored.",
+      "2.0.5: CI gates PRs with scripts/ci-validate-manifest.sh; Skills.md marked non-authoritative for versions; Runner/Tests have no package Version by design.",
+      "2.0.6: Removed the Newsroom sample (feature, steps, page object, environment config, and local credential overlay).",
+      "2.0.7: Evidence-based Healenium healing — versioned local baselines, ScoreCap, step-gated promotion.",
+      "2.0.8: Desktop automation uses FlaUI (UIA2/UIA3) via DesktopSessionFactory.",
+      "2.0.9: Desktop documentation completeness — Calculator vs login-template limitation, Category=Calculator filter, config.desktop.launchMode.",
+      "2.0.10: Desktop public API is DesktopSessionFactory only; leftover driver-compatibility types removed.",
+      "2.0.11: Multi-target net8.0;net9.0;net10.0; SDK pin 10.0.100; Extent Spark on net8 only."
+    ]
+  },
+  "framework": {
+    "id": "qualiframe-selenium-csharp-nunit",
+    "name": "QualiFrame",
+    "displayName": "QualiFrame C# NUnit",
+    "version": "3.1.1",
+    "purpose": "Enterprise-oriented test automation for web, API, mobile, desktop, PDF, and mocking with BDD and modular NUnit execution.",
+    "license": "Apache-2.0",
+    "licenseReferences": [
+      "LICENSE-NOTICE.md"
+    ],
+    "languages": [
+      {
+        "name": "C#",
+        "target": "net8.0;net9.0;net10.0",
+        "sdkPin": "10.0.100",
+        "sdkPinFile": "global.json"
+      }
+    ],
+    "automationTechnologies": [
+      "Selenium WebDriver 4.43",
+      "Appium.WebDriver 8.2",
+      "RestSharp",
+      "FlaUI",
+      "Healenium",
+      "WireMock.Net",
+      "PdfPig"
+    ],
+    "testRunners": [
+      "NUnit",
+      "NUnit3TestAdapter",
+      "Reqnroll.NUnit",
+      "QualiFrame.Runner"
+    ],
+    "assertionLibraries": [
+      "NUnit.Framework",
+      "FluentAssertions"
+    ],
+    "build": {
+      "packageManagers": [
+        "NuGet",
+        "dotnet CLI"
+      ],
+      "solution": "Qualiframe-CSharp-NUnit_v3.0.sln",
+      "solutionFilters": {
+        "testsOnly": "Qualiframe-CSharp-NUnit_v3.0-TestsOnly.slnf"
+      },
+      "sdkPin": {
+        "file": "global.json",
+        "version": "10.0.100",
+        "rollForward": "latestFeature"
+      }
+    },
+    "supportedPlatforms": [
+      "Web",
+      "REST",
+      "GraphQL",
+      "Android",
+      "iOS",
+      "Windows desktop",
+      "PDF"
+    ],
+    "executionEnvironments": [
+      "local",
+      "CI",
+      "Selenium Grid/remote",
+      "cloud device farms",
+      "Docker (Healenium/WireMock)"
+    ],
+    "repository": {
+      "solution": "Qualiframe-CSharp-NUnit_v3.0.sln",
+      "layout": "Layered src/ projects plus docs/, scripts/, and optional healenium/ Docker Compose for the self-healing backend."
+    },
+    "projects": [
+      {
+        "name": "QualiFrame.Framework",
+        "path": "src/QualiFrame.Framework/QualiFrame.Framework.csproj",
+        "role": "shared_framework_library",
+        "packable": true,
+        "notes": "Package Version is 3.1.1, matching frameworkVersion."
+      },
+      {
+        "name": "QualiFrame.Tests",
+        "path": "src/QualiFrame.Tests/QualiFrame.Tests.csproj",
+        "role": "test_implementation",
+        "packable": false,
+        "isTestProject": true,
+        "notes": "No package Version attribute; test project is not published."
+      },
+      {
+        "name": "QualiFrame.Runner.Core",
+        "path": "src/QualiFrame.Runner.Core/QualiFrame.Runner.Core.csproj",
+        "role": "runner_orchestration",
+        "notes": "Lightweight dotnet test CLI orchestration; Microsoft.Extensions.Configuration only. Debug-only build configuration. No package Version; not published."
+      },
+      {
+        "name": "QualiFrame.Runner",
+        "path": "src/QualiFrame.Runner/QualiFrame.Runner.csproj",
+        "role": "cli_runner",
+        "notes": "Thin CLI host over Runner.Core; not a test project. Debug-only build configuration. No package Version; not published."
+      },
+      {
+        "name": "QualiFrame.Pdf.Core.Engine",
+        "path": "src/QualiFrame.Pdf.Core.Engine/QualiFrame.Pdf.Core.Engine.csproj",
+        "role": "pdf_engine",
+        "packable": true,
+        "notes": "Package Version is 3.1.1, matching frameworkVersion."
+      },
+      {
+        "name": "QualiFrame.Mocking",
+        "path": "src/QualiFrame.Mocking/QualiFrame.Mocking.csproj",
+        "role": "api_mocking",
+        "packable": true,
+        "notes": "Package Version is 3.1.1, matching frameworkVersion."
+      }
+    ]
+  },
+  "architecture": {
+    "style": "layered",
+    "summary": "Shared Framework library, application Tests, PDF engine, Mocking library, and a CLI runner that shells out to dotnet test.",
+    "executionFlow": "QualiFrame.Runner -> QualiFrame.Runner.Core -> dotnet test QualiFrame.Tests -> Framework/Pdf/Mocking",
+    "layers": [
+      {
+        "id": "layer.framework",
+        "name": "Framework library",
+        "path": "src/QualiFrame.Framework",
+        "rule": "Generic abstractions only; no application-specific page objects."
+      },
+      {
+        "id": "layer.tests",
+        "name": "Test implementation",
+        "path": "src/QualiFrame.Tests",
+        "rule": "Application page objects, features, steps, hooks, and executable tests."
+      },
+      {
+        "id": "layer.pdf",
+        "name": "PDF engine",
+        "path": "src/QualiFrame.Pdf.Core.Engine",
+        "responsibilities": [
+          "extraction",
+          "comparison",
+          "validation pipeline"
+        ]
+      },
+      {
+        "id": "layer.mocking",
+        "name": "Mocking",
+        "path": "src/QualiFrame.Mocking",
+        "responsibilities": [
+          "WireMock",
+          "OpenAPI stubs",
+          "hybrid UI/API"
+        ]
+      },
+      {
+        "id": "layer.runner",
+        "name": "Runner CLI",
+        "path": "src/QualiFrame.Runner",
+        "rule": "Must not project-reference QualiFrame.Tests."
+      },
+      {
+        "id": "layer.runner.core",
+        "name": "Runner orchestration",
+        "path": "src/QualiFrame.Runner.Core"
+      },
+      {
+        "id": "layer.healenium",
+        "name": "Healenium self-healing",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver",
+        "responsibilities": [
+          "HealeniumDriverWrapper intercepts FindElement",
+          "External backend at Healenium:BackendUrl",
+          "Optional in-repo compose at healenium/; start per DOC-HEALINFRA-001 / DOC-HEAL-001"
+        ]
+      }
+    ],
+    "abstractions": [
+      "IPageObject",
+      "IWebDriverFactory",
+      "IDataRepository",
+      "IEnhancedElement",
+      "IComponent",
+      "ICloudPlatform",
+      "IKeyword",
+      "IActor/ITask/IQuestion/IAbility",
+      "ITestExecutionService",
+      "IReportingService",
+      "IPdfValidator",
+      "IPdfComparer"
+    ],
+    "extensionPoints": [
+      {
+        "name": "DI registration",
+        "path": "src/QualiFrame.Framework/Core/DependencyInjection/ServiceCollectionExtensions.cs",
+        "guidance": "AddQualiFrameServices; swap IWebDriverFactory via QualiFrameServiceOptions."
+      },
+      {
+        "name": "PDF validation plugins",
+        "path": "src/QualiFrame.Pdf.Core.Engine/Integration/PdfServiceCollectionExtensions.cs",
+        "guidance": "AddQualiFramePdfValidationEngine and IPdfValidator implementations."
+      },
+      {
+        "name": "Page objects",
+        "path": "src/QualiFrame.Tests/PageObjects",
+        "guidance": "Inherit BasePage or ComponentPage; do not add app pages under Framework/PageBases."
+      },
+      {
+        "name": "Keywords",
+        "path": "src/QualiFrame.Framework/KeywordDriven/KeywordRegistry.cs",
+        "guidance": "Implement IKeyword/BaseKeyword; registry scans KeywordDriven.Keywords."
+      },
+      {
+        "name": "Cloud platforms",
+        "path": "src/QualiFrame.Framework/Cloud/CloudPlatformFactory.cs",
+        "guidance": "Subclass BaseCloudPlatform and wire via CloudTesting config flags."
+      },
+      {
+        "name": "Data repositories",
+        "path": "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs",
+        "guidance": "Implement IDataRepository and extend the factory switch."
+      }
+    ],
+    "boundaries": [
+      "Do not add application page objects under src/QualiFrame.Framework/PageBases.",
+      "Runner must invoke QualiFrame.Tests via dotnet test at runtime, not a project reference.",
+      "Prefer EnhancedWebDriverFactory/IWebDriverFactory over any legacy factory."
+    ],
+    "notes": [
+      "CalculatorPage under Framework/Desktop/Pages is a sample Windows Calculator page, an exception to the app-PO boundary."
+    ]
+  },
+  "automationApproaches": {
+    "summary": "Hybrid framework: modular NUnit, Reqnroll BDD, file-backed data-driven, keyword-driven Excel scripts, and Screenplay.",
+    "items": [
+      {
+        "id": "approach.modular",
+        "name": "Modular",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Template-method NUnit tests via ModularTestCase.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Core/ModularTestCase.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/LoginModularTest.cs"
+        ],
+        "documentationReferences": [
+          "DOC-BDD-001"
+        ]
+      },
+      {
+        "id": "approach.bdd",
+        "name": "BDD",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Reqnroll Gherkin features, bindings, BoDi DI, and lifecycle hooks.",
+        "featureFiles": [
+          "src/QualiFrame.Tests/Features/Web.feature",
+          "src/QualiFrame.Tests/Features/API.feature",
+          "src/QualiFrame.Tests/Features/Mobile.feature",
+          "src/QualiFrame.Tests/Features/Desktop.feature",
+          "src/QualiFrame.Tests/Features/Shopify_HomePageNavigation.feature",
+          "src/QualiFrame.Tests/Features/GraphQL.feature"
+        ],
+        "stepDefinitions": [
+          "src/QualiFrame.Tests/StepDefinitions/WebSteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/APISteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/MobileSteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/DesktopSteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/ShopifyHomePageNavigationSteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/CalculatorSteps.cs",
+          "src/QualiFrame.Tests/StepDefinitions/GraphQLSteps.cs"
+        ],
+        "hooks": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs",
+          "src/QualiFrame.Tests/Hooks/DesktopHooks.cs"
+        ],
+        "runners": [
+          "src/QualiFrame.Tests/reqnroll.json"
+        ],
+        "tags": [
+          "@WebDemo",
+          "@API",
+          "@Mobile",
+          "@Android",
+          "@iOS",
+          "@Desktop",
+          "@Calculator",
+          "@P1-High"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Features",
+          "src/QualiFrame.Tests/StepDefinitions",
+          "src/QualiFrame.Tests/Hooks"
+        ],
+        "documentationReferences": [
+          "DOC-BDD-001"
+        ]
+      },
+      {
+        "id": "approach.dataDriven",
+        "name": "Data-Driven",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Scenario outlines plus Excel/CSV/JSON repositories via DataRepositoryFactory.",
+        "dataSources": [
+          "Excel",
+          "CSV",
+          "JSON",
+          "Gherkin Examples tables"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs"
+        ],
+        "documentationReferences": [
+          "DOC-AGENT-001"
+        ]
+      },
+      {
+        "id": "approach.keywordDriven",
+        "name": "Keyword-Driven",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Excel-parsed keyword scripts executed through KeywordRegistry.",
+        "keywordDefinitions": [
+          "src/QualiFrame.Framework/KeywordDriven/Keywords/ClickKeyword.cs",
+          "src/QualiFrame.Framework/KeywordDriven/Keywords/TypeKeyword.cs",
+          "src/QualiFrame.Framework/KeywordDriven/Keywords/NavigateKeyword.cs",
+          "src/QualiFrame.Framework/KeywordDriven/Keywords/WaitKeyword.cs",
+          "src/QualiFrame.Framework/KeywordDriven/Keywords/VerifyTextKeyword.cs"
+        ],
+        "extensionModel": "Implement IKeyword/BaseKeyword; KeywordRegistry scans KeywordDriven.Keywords and RegisterKeyword overwrites by uppercase name.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/KeywordDriven/KeywordRegistry.cs",
+          "src/QualiFrame.Framework/KeywordDriven/ExcelKeywordParser.cs",
+          "src/QualiFrame.Framework/KeywordDriven/TestScript.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/KeywordDrivenTest.cs"
+        ]
+      },
+      {
+        "id": "approach.hybrid",
+        "name": "Hybrid",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Multiple approaches coexist; Mocking adds hybrid UI/API orchestration.",
+        "implementationReferences": [
+          "src/QualiFrame.Mocking/HybridTesting/HybridTestOrchestrator.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Integration/Mocking/SampleHybridUiApiTest.cs"
+        ]
+      },
+      {
+        "id": "approach.screenplay",
+        "name": "Screenplay",
+        "supported": true,
+        "status": "implemented",
+        "confidence": "high",
+        "purpose": "Actor/Task/Question/Ability test style for web interactions.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Screenplay/Actor.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/ScreenplayTest.cs"
+        ]
+      }
+    ]
+  },
+  "capabilities": {
+    "summary": "Only capabilities verified in source or configuration are listed.",
+    "items": [
+      {
+        "id": "capability.web",
+        "name": "Web Automation",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "Selenium.WebDriver 4.43",
+          "ChromeDriver",
+          "GeckoDriver",
+          "MSEdgeDriver"
+        ],
+        "moduleReferences": [
+          "module.web.core"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs",
+          "src/QualiFrame.Framework/PageBases/BasePage.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.web.driverFactory",
+          "component.web.click",
+          "component.web.windowFrame"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Web.feature",
+          "src/QualiFrame.Tests/PageObjects/WebPage.cs"
+        ],
+        "documentationReferences": [
+          "DOC-WEB-001"
+        ],
+        "evidence": [
+          {
+            "summary": "Factory creates Chrome/Firefox/Edge/Safari plus headless/remote.",
+            "path": "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs"
+          }
+        ]
+      },
+      {
+        "id": "capability.web.selfHealing",
+        "name": "Web self-healing",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "Healenium"
+        ],
+        "moduleReferences": [
+          "module.web.core"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs"
+        ],
+        "configurationReferences": [
+          "config.healenium.enabled"
+        ],
+        "reusableComponentReferences": [
+          "component.web.selfHealing"
+        ],
+        "documentationReferences": [
+          "DOC-HEAL-001",
+          "DOC-HEALINFRA-001"
+        ],
+        "limitations": [
+          "Requires a Healenium backend at Healenium:BackendUrl; no locator API change when enabled.",
+          "Optional in-repo stack: healenium/docker-compose.yml. Tests do not start Docker."
+        ]
+      },
+      {
+        "id": "capability.web.visual",
+        "name": "Visual testing",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "SkiaSharp"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Web/Visual/VisualTester.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.web.visualTester"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/VisualTesterExample.cs"
+        ],
+        "notes": "Applitools Eyes.Selenium was removed; leftover Applitools:* config keys were also removed. Visual testing uses SkiaSharp VisualTester."
+      },
+      {
+        "id": "capability.web.accessibility",
+        "name": "Accessibility testing",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "Selenium.Axe"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Web/Accessibility/AccessibilityTester.cs",
+          "src/QualiFrame.Framework/Web/Accessibility/WCAGComplianceChecker.cs"
+        ],
+        "configurationReferences": [
+          "config.accessibility.enabled"
+        ],
+        "reusableComponentReferences": [
+          "component.web.accessibility"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/AccessibilityTest.cs"
+        ]
+      },
+      {
+        "id": "capability.web.crossBrowser",
+        "name": "Cross-browser",
+        "status": "implemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs"
+        ],
+        "configurationReferences": [
+          "config.browser"
+        ]
+      },
+      {
+        "id": "capability.api.rest",
+        "name": "REST API",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "RestSharp",
+          "Polly"
+        ],
+        "moduleReferences": [
+          "module.api"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/EnhancedApiClient.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.api.restClient",
+          "component.api.retry"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/API.feature",
+          "src/QualiFrame.Tests/StepDefinitions/APISteps.cs"
+        ],
+        "documentationReferences": [
+          "DOC-API-001"
+        ]
+      },
+      {
+        "id": "capability.api.graphql",
+        "name": "GraphQL",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "GraphQL.Client"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/GraphQL/GraphQLClient.cs",
+          "src/QualiFrame.Framework/API/GraphQL/QueryBuilder.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.api.graphql"
+        ],
+        "configurationReferences": [
+          "config.api.graphqlEndpoint"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/GraphQL.feature",
+          "src/QualiFrame.Tests/StepDefinitions/GraphQLSteps.cs"
+        ],
+        "notes": "Example uses the public countries GraphQL API and marks inconclusive if the endpoint is unreachable."
+      },
+      {
+        "id": "capability.api.grpc",
+        "name": "gRPC",
+        "status": "partiallyImplemented",
+        "confidence": "high",
+        "technologies": [
+          "Grpc.Net.Client",
+          "Grpc.Tools"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/Grpc/GrpcChannelFactory.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.api.grpc"
+        ],
+        "notes": "Opt-in channel factory only. No protobuf stubs ship in this repository."
+      },
+      {
+        "id": "capability.api.websocket",
+        "name": "WebSocket",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "System.Net.WebSockets.Client"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/WebSocket/WebSocketTestClient.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.api.websocket"
+        ],
+        "notes": "Opt-in client. Requires APITesting:WebSocket:Url."
+      },
+      {
+        "id": "capability.mobile",
+        "name": "Mobile automation",
+        "status": "partiallyImplemented",
+        "confidence": "high",
+        "technologies": [
+          "Appium.WebDriver"
+        ],
+        "moduleReferences": [
+          "module.mobile"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/Mobile/AppiumDriverFactory.cs",
+          "src/QualiFrame.Framework/Mobile/Utilities/GestureActions.cs",
+          "src/QualiFrame.Framework/Mobile/Utilities/MobileContextSwitcher.cs",
+          "src/QualiFrame.Framework/Utilities/Mobile/AppiumServerManager.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.mobile.driverFactory",
+          "component.mobile.gestures",
+          "component.mobile.context"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Mobile.feature",
+          "src/QualiFrame.Tests/StepDefinitions/MobileSteps.cs"
+        ],
+        "documentationReferences": [
+          "DOC-MOBILE-001"
+        ],
+        "limitations": [
+          "Existing Mobile.feature steps still accept element ids for backward compatibility; new work should use MobileAppScreen named locators.",
+          "WEBVIEW switching is available via MobileContextSwitcher; hybrid apps still require a real WEBVIEW context at runtime.",
+          "Mobile web uses Mobile:BrowserName; empty means native/app path."
+        ]
+      },
+      {
+        "id": "capability.desktop",
+        "name": "Desktop automation",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "FlaUI"
+        ],
+        "moduleReferences": [
+          "module.desktop"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Desktop/Drivers/DesktopSessionFactory.cs",
+          "src/QualiFrame.Framework/Desktop/Drivers/DesktopSession.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.desktop.actions",
+          "component.desktop.session"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Desktop.feature",
+          "src/QualiFrame.Tests/StepDefinitions/CalculatorSteps.cs"
+        ],
+        "documentationReferences": [
+          "DOC-DESKTOP-001"
+        ],
+        "limitations": [
+          "Windows-only; DesktopHooks marks non-Windows inconclusive.",
+          "Shipped Desktop:AppId is Windows Calculator. Category=Calculator is the runnable sample.",
+          "The @Desktop login scenario (DesktopSteps / LoginWindow) is a locator template and fails against Calculator unless AppId and locators are retargeted."
+        ]
+      },
+      {
+        "id": "capability.desktop.selfHealing",
+        "name": "Desktop locator self-healing",
+        "status": "implemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Desktop/Locators/SelfHealingLocatorEngine.cs"
+        ]
+      },
+      {
+        "id": "capability.database.sql",
+        "name": "SQL database",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "Microsoft.Data.SqlClient"
+        ],
+        "moduleReferences": [
+          "module.data"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/SqlDataRepository.cs",
+          "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs"
+        ],
+        "configurationReferences": [
+          "config.database.timeout",
+          "config.database.connectionString",
+          "config.database.defaultTable"
+        ],
+        "reusableComponentReferences": [
+          "component.data.sqlRepository"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Unit/SqlDataRepositoryTests.cs"
+        ],
+        "notes": "Opt-in via DataRepositoryFactory (SQL/SQLSERVER/MSSQL/DATABASE). Factory default remains Excel. Requires Environments:QA:DatabaseConnectionString."
+      },
+      {
+        "id": "capability.data.files",
+        "name": "Excel/CSV/JSON files",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "ClosedXML",
+          "CsvHelper"
+        ],
+        "moduleReferences": [
+          "module.data"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/ExcelDataRepository.cs",
+          "src/QualiFrame.Framework/Data/Repositories/CsvDataRepository.cs",
+          "src/QualiFrame.Framework/Data/Repositories/JsonDataRepository.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.data.repositoryFactory"
+        ]
+      },
+      {
+        "id": "capability.messaging.kafka",
+        "name": "Kafka",
+        "status": "partiallyImplemented",
+        "confidence": "high",
+        "technologies": [
+          "Confluent.Kafka"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Messaging/KafkaMessageClient.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.messaging.kafka"
+        ],
+        "notes": "Opt-in produce/consume helper. Requires Messaging:Kafka:BootstrapServers."
+      },
+      {
+        "id": "capability.contract",
+        "name": "Contract testing",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "WireMock.Net",
+          "Microsoft.OpenApi"
+        ],
+        "moduleReferences": [
+          "module.mocking"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Mocking/Contracts/ContractValidator.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Integration/Mocking/SampleContractValidationTest.cs"
+        ],
+        "notes": "OpenAPI-style, not Pact."
+      },
+      {
+        "id": "capability.mocking",
+        "name": "Mocking / service virtualization",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "WireMock.Net",
+          "Docker.DotNet"
+        ],
+        "moduleReferences": [
+          "module.mocking"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Mocking/Server/WireMockServerManager.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.mocking.wiremock"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Integration/Mocking/SampleSwaggerDrivenMockTest.cs"
+        ],
+        "documentationReferences": [
+          "DOC-API-001"
+        ]
+      },
+      {
+        "id": "capability.pdf",
+        "name": "PDF validation",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "PdfPig",
+          "SkiaSharp"
+        ],
+        "moduleReferences": [
+          "module.pdf"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Pdf.Core.Engine/Engine/PdfValidationEngine.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.pdf.engine"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/PDFTests/PdfValidationEngineTests.cs"
+        ],
+        "documentationReferences": [
+          "DOC-PDF-001"
+        ]
+      },
+      {
+        "id": "capability.performance",
+        "name": "Performance monitoring",
+        "status": "partiallyImplemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/ApiPerformanceMonitor.cs",
+          "src/QualiFrame.Framework/Performance/ResourceUtilizationTracker.cs"
+        ],
+        "notes": "In-process monitors only. NBomber removed; load testing expected via external k6/JMeter."
+      },
+      {
+        "id": "capability.security.zap",
+        "name": "OWASP ZAP security scans",
+        "status": "partiallyImplemented",
+        "confidence": "medium",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Security/SecurityTester.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/SecurityTest.cs"
+        ],
+        "notes": "Requires an external ZAP server. SecurityTester.IsAvailable() returns false when disabled or unreachable; the example marks inconclusive."
+      },
+      {
+        "id": "capability.parallel",
+        "name": "Parallel execution",
+        "status": "implemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/ParallelConfig.cs",
+          "src/QualiFrame.Framework/Utilities/WebDriver/DriverPool.cs"
+        ],
+        "configurationReferences": [
+          "config.parallel.enable"
+        ]
+      },
+      {
+        "id": "capability.cloud",
+        "name": "Cloud execution",
+        "status": "implemented",
+        "confidence": "high",
+        "moduleReferences": [
+          "module.cloud"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/CloudPlatformFactory.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.cloud.platformFactory"
+        ],
+        "configurationReferences": [
+          "config.cloud.browserstack"
+        ],
+        "notes": "Priority: BrowserStack > LambdaTest > SauceLabs > Perfecto > Experitest > AWS Device Farm. Disabled by default."
+      },
+      {
+        "id": "capability.ai.testSelection",
+        "name": "ML-assisted test selection",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "Microsoft.ML"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Analytics/SmartTestSelector.cs"
+        ],
+        "configurationReferences": [
+          "config.smartTestSelection.enabled"
+        ],
+        "notes": "Default disabled in appsettings."
+      },
+      {
+        "id": "capability.reporting",
+        "name": "Reporting",
+        "status": "implemented",
+        "confidence": "high",
+        "technologies": [
+          "ExtentReports",
+          "Allure"
+        ],
+        "moduleReferences": [
+          "module.reporting"
+        ],
+        "reusableComponentReferences": [
+          "component.reporting.unified",
+          "component.reporting.extent"
+        ],
+        "documentationReferences": [
+          "DOC-REPORT-001"
+        ]
+      },
+      {
+        "id": "capability.video",
+        "name": "Video recording",
+        "status": "implemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/VideoRecordingManager.cs"
+        ],
+        "configurationReferences": [
+          "config.videoRecording"
+        ],
+        "reusableComponentReferences": [
+          "component.web.videoRecording"
+        ],
+        "notes": "Opt-in screenshot-sequence capture (default false). Cloud Video capability is passed only when enabled so existing cloud defaults stay unchanged."
+      }
+    ]
+  },
+  "designPatterns": {
+    "items": [
+      {
+        "id": "pattern.pageObject",
+        "name": "Page Object",
+        "status": "implemented",
+        "purpose": "BasePage/ComponentPage in Framework; app pages in Tests.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/PageBases/BasePage.cs",
+          "src/QualiFrame.Framework/PageBases/ComponentPage.cs"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/PageObjects/WebPage.cs",
+          "src/QualiFrame.Tests/PageObjects/ShopifyHomePage.cs"
+        ],
+        "documentationReferences": [
+          "DOC-ARCH-001",
+          "DOC-POM-001"
+        ]
+      },
+      {
+        "id": "pattern.componentObject",
+        "name": "Component Object",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Web/Components/BaseComponent.cs"
+        ]
+      },
+      {
+        "id": "pattern.factory",
+        "name": "Factory",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs",
+          "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs",
+          "src/QualiFrame.Framework/Cloud/CloudPlatformFactory.cs"
+        ]
+      },
+      {
+        "id": "pattern.builder",
+        "name": "Builder",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/GraphQL/QueryBuilder.cs",
+          "src/QualiFrame.Runner.Core/TestRunnerOptions.cs"
+        ]
+      },
+      {
+        "id": "pattern.strategy",
+        "name": "Strategy",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/ICloudPlatform.cs",
+          "src/QualiFrame.Framework/Cloud/BaseCloudPlatform.cs"
+        ]
+      },
+      {
+        "id": "pattern.di",
+        "name": "Dependency Injection",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Core/DependencyInjection/ServiceCollectionExtensions.cs"
+        ],
+        "notes": "Microsoft.Extensions.DependencyInjection plus Reqnroll BoDi for steps."
+      },
+      {
+        "id": "pattern.repository",
+        "name": "Repository",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/IDataRepository.cs"
+        ]
+      },
+      {
+        "id": "pattern.adapter",
+        "name": "Adapter",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Reports/ReqnrollExtentAdapter.cs",
+          "src/QualiFrame.Pdf.Core.Engine/Engine/PdfComparerAdapter.cs",
+          "src/QualiFrame.Framework/Utilities/WebDriver/WebDriverFactoryWrapper.cs"
+        ]
+      },
+      {
+        "id": "pattern.facade",
+        "name": "Facade",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Reporting/UnifiedReportingService.cs"
+        ]
+      },
+      {
+        "id": "pattern.service",
+        "name": "Service Layer",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Core/Services/ITestExecutionService.cs",
+          "src/QualiFrame.Framework/Core/Services/IReportingService.cs"
+        ]
+      },
+      {
+        "id": "pattern.templateMethod",
+        "name": "Template Method",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Core/ModularTestCase.cs"
+        ]
+      },
+      {
+        "id": "pattern.objectPool",
+        "name": "Object Pool",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/DriverPool.cs"
+        ]
+      },
+      {
+        "id": "pattern.decorator",
+        "name": "Wrapper/Decorator",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs"
+        ]
+      },
+      {
+        "id": "pattern.hook",
+        "name": "Hook/Fixture",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs",
+          "src/QualiFrame.Tests/Hooks/DesktopHooks.cs",
+          "src/QualiFrame.Mocking/Fixtures/MockServerFixture.cs"
+        ]
+      },
+      {
+        "id": "pattern.screenplay",
+        "name": "Screenplay",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Screenplay/Actor.cs",
+          "src/QualiFrame.Framework/Screenplay/ITask.cs"
+        ]
+      }
+    ]
+  },
+  "standards": {
+    "summary": "AI-consumable rules derived from agent-instructions and verified framework usage.",
+    "items": [
+      {
+        "id": "standard.structure.layers",
+        "name": "Layer boundaries",
+        "rule": "Place generic abstractions in QualiFrame.Framework and application pages/features under QualiFrame.Tests.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "standard.web.pageObjects",
+        "name": "Page object location",
+        "rule": "New UI pages belong in src/QualiFrame.Tests/PageObjects and must inherit BasePage or ComponentPage.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ],
+        "examples": [
+          "src/QualiFrame.Tests/PageObjects/WebPage.cs"
+        ]
+      },
+      {
+        "id": "standard.web.factory",
+        "name": "Driver factory",
+        "rule": "Create browsers through EnhancedWebDriverFactory or IWebDriverFactory, not ad-hoc driver construction.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/webdriver-and-healing.md"
+        ]
+      },
+      {
+        "id": "standard.web.waits",
+        "name": "Synchronization",
+        "rule": "Use framework wait helpers (BasePage waits, IEnhancedElement.WaitForVisible/WaitForClickable, WebDriverWait) instead of arbitrary sleeps.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "src/QualiFrame.Framework/PageBases/BasePage.cs",
+          "docs/guides/SELF_HEALING_AUTOMATION_GUIDE.md"
+        ]
+      },
+      {
+        "id": "standard.web.locators",
+        "name": "Locator placement",
+        "rule": "Keep locators in page/component objects, not in step/test logic.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "src/QualiFrame.Tests/PageObjects/README.md"
+        ]
+      },
+      {
+        "id": "standard.web.healing",
+        "name": "Self-healing usage",
+        "rule": "Toggle Healenium via configuration; do not change locator APIs. Do not rely on healing instead of explicit waits.",
+        "severity": "recommended",
+        "sourceReferences": [
+          "docs/guides/SELF_HEALING_AUTOMATION_GUIDE.md"
+        ]
+      },
+      {
+        "id": "standard.assertions",
+        "name": "Assertions",
+        "rule": "Use NUnit Assert.* as the default; FluentAssertions is available in the test project.",
+        "severity": "recommended",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "standard.bdd.steps",
+        "name": "Reqnroll steps",
+        "rule": "Use [Binding] classes in StepDefinitions with constructor injection (BoDi). Reuse existing step classes before adding duplicates.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/bdd-and-modular-tests.md"
+        ]
+      },
+      {
+        "id": "standard.modular.template",
+        "name": "Modular tests",
+        "rule": "Inherit ModularTestCase and implement only SetUp, ExecuteTest, and TearDown. Do not add a competing [Test] on ExecuteTest.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "src/QualiFrame.Framework/Core/ModularTestCase.cs"
+        ]
+      },
+      {
+        "id": "standard.data.factory",
+        "name": "Test data access",
+        "rule": "Prefer DataRepositoryFactory plus files under Data/ over large embedded payloads.",
+        "severity": "recommended",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "standard.config.secrets",
+        "name": "Secrets",
+        "rule": "Reference secrets through TestConfiguration/SecretsManager/Key Vault. Never commit real credentials or copy secret values into the manifest.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md",
+          "docs/context/configuration.md"
+        ]
+      },
+      {
+        "id": "standard.reporting.unified",
+        "name": "Reporting API",
+        "rule": "Prefer UnifiedReportingService when Extent and Allure must stay aligned. Respect AsyncLocal thread isolation.",
+        "severity": "recommended",
+        "sourceReferences": [
+          "docs/context/reporting.md"
+        ]
+      },
+      {
+        "id": "standard.runner.boundary",
+        "name": "Runner isolation",
+        "rule": "Do not add a project reference from Runner to QualiFrame.Tests.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "standard.execution.mtp",
+        "name": "MTP-safe test invocation",
+        "rule": "Run tests against QualiFrame.Tests.csproj or the TestsOnly solution filter; avoid solution-wide dotnet test when Runner is loaded.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/execution.md"
+        ]
+      },
+      {
+        "id": "standard.desktop.windows",
+        "name": "Desktop OS",
+        "rule": "Desktop scenarios require Windows/FlaUI; use DesktopHooks rather than starting a desktop session ad hoc.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/guides/DESKTOP_AUTOMATION.md"
+        ]
+      },
+      {
+        "id": "standard.pdf.paths",
+        "name": "PDF paths",
+        "rule": "Resolve PDF fixtures via test path helpers; do not hard-code absolute machine paths.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/pdf.md"
+        ]
+      },
+      {
+        "id": "standard.cleanup.drivers",
+        "name": "Driver cleanup",
+        "rule": "Quit/close drivers through factory/hooks/pool cleanup rather than leaking process-level browsers.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs"
+        ]
+      },
+      {
+        "id": "standard.api.client",
+        "name": "API client reuse",
+        "rule": "Use EnhancedApiClient (REST) or GraphQLClient/QueryBuilder. Do not add a parallel HTTP client.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/api-mocking-mobile-orchestration.md",
+          "src/QualiFrame.Framework/API/EnhancedApiClient.cs"
+        ]
+      },
+      {
+        "id": "standard.mobile.reuse",
+        "name": "Mobile reuse",
+        "rule": "Create Appium sessions through AppiumDriverFactory. Reuse GestureActions, DeviceRotator, KeyboardHandler, MobileContextSwitcher, and AppiumServerManager. Do not construct AndroidDriver/IOSDriver in steps.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/api-mocking-mobile-orchestration.md",
+          "src/QualiFrame.Tests/StepDefinitions/MobileSteps.cs"
+        ]
+      },
+      {
+        "id": "standard.data.sql",
+        "name": "SQL test data",
+        "rule": "SQL is opt-in via DataRepositoryFactory (SQL/SQLSERVER/MSSQL/DATABASE). Excel remains the default. Do not add a second SQL client.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md",
+          "src/QualiFrame.Framework/Data/Repositories/SqlDataRepository.cs"
+        ]
+      },
+      {
+        "id": "standard.logging",
+        "name": "Logging",
+        "rule": "Use QualiFrame.Framework.Utilities.Logging.Logger. Never log raw secrets; SensitiveDataMasker is applied.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "src/QualiFrame.Framework/Utilities/Logging/Logger.cs",
+          "src/QualiFrame.Framework/Utilities/Logging/SensitiveDataMasker.cs"
+        ]
+      },
+      {
+        "id": "standard.exceptions.retry",
+        "name": "Retries and exceptions",
+        "rule": "Reuse API Polly retries, IEnhancedElement retry counts, and RetryableException. There is no global NUnit [Retry] policy.",
+        "severity": "recommended",
+        "sourceReferences": [
+          "src/QualiFrame.Framework/API/EnhancedApiClient.cs",
+          "src/QualiFrame.Framework/Core/Exceptions/RetryableException.cs"
+        ]
+      },
+      {
+        "id": "standard.video",
+        "name": "Video recording",
+        "rule": "Video capture is opt-in via TestConfiguration:VideoRecording. Do not add a second recorder; VideoRecordingManager is wired from EnhancedWebDriverFactory.",
+        "severity": "mandatory",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md",
+          "src/QualiFrame.Framework/Utilities/WebDriver/VideoRecordingManager.cs"
+        ]
+      }
+    ]
+  },
+  "modules": {
+    "items": [
+      {
+        "id": "module.web.core",
+        "name": "Web core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver",
+        "type": "library",
+        "purpose": "Driver factory, pool, health, Healenium wrap.",
+        "publicInterfaces": [
+          "EnhancedWebDriverFactory",
+          "IWebDriverFactory",
+          "HealeniumDriverWrapper",
+          "DriverPool"
+        ],
+        "capabilities": [
+          "capability.web",
+          "capability.web.selfHealing",
+          "capability.web.crossBrowser"
+        ]
+      },
+      {
+        "id": "module.web.pages",
+        "name": "Page bases and components",
+        "path": "src/QualiFrame.Framework/PageBases",
+        "type": "library",
+        "purpose": "POM foundations and reusable UI components.",
+        "publicInterfaces": [
+          "BasePage",
+          "ComponentPage",
+          "IPageObject"
+        ],
+        "capabilities": [
+          "capability.web"
+        ]
+      },
+      {
+        "id": "module.api",
+        "name": "API clients",
+        "path": "src/QualiFrame.Framework/API",
+        "type": "library",
+        "purpose": "REST client, GraphQL, retry, schema validation.",
+        "publicInterfaces": [
+          "EnhancedApiClient",
+          "GraphQLClient",
+          "QueryBuilder"
+        ],
+        "capabilities": [
+          "capability.api.rest",
+          "capability.api.graphql"
+        ]
+      },
+      {
+        "id": "module.mobile",
+        "name": "Mobile",
+        "path": "src/QualiFrame.Framework/Mobile",
+        "type": "library",
+        "purpose": "Appium element and gesture helpers.",
+        "publicInterfaces": [
+          "AppiumDriverFactory",
+          "GestureActions",
+          "MobileContextSwitcher",
+          "MobileElement",
+          "AppiumServerManager"
+        ],
+        "capabilities": [
+          "capability.mobile"
+        ]
+      },
+      {
+        "id": "module.desktop",
+        "name": "Desktop",
+        "path": "src/QualiFrame.Framework/Desktop",
+        "type": "library",
+        "purpose": "FlaUI desktop automation (Microsoft UI Automation).",
+        "publicInterfaces": [
+          "DesktopSessionFactory",
+          "DesktopSession",
+          "DesktopActions",
+          "DesktopPage",
+          "CalculatorPage"
+        ],
+        "capabilities": [
+          "capability.desktop"
+        ]
+      },
+      {
+        "id": "module.cloud",
+        "name": "Cloud platforms",
+        "path": "src/QualiFrame.Framework/Cloud",
+        "type": "library",
+        "purpose": "Remote WebDriver factories for device clouds.",
+        "publicInterfaces": [
+          "CloudPlatformFactory",
+          "ICloudPlatform"
+        ],
+        "capabilities": [
+          "capability.cloud"
+        ]
+      },
+      {
+        "id": "module.data",
+        "name": "Data repositories",
+        "path": "src/QualiFrame.Framework/Data/Repositories",
+        "type": "library",
+        "purpose": "Excel/CSV/JSON test data access plus opt-in SQL Server.",
+        "publicInterfaces": [
+          "IDataRepository",
+          "DataRepositoryFactory",
+          "SqlDataRepository"
+        ],
+        "capabilities": [
+          "capability.data.files",
+          "capability.database.sql"
+        ]
+      },
+      {
+        "id": "module.reporting",
+        "name": "Reporting",
+        "path": "src/QualiFrame.Framework/Reporting",
+        "type": "library",
+        "purpose": "Extent, Allure, unified facade.",
+        "publicInterfaces": [
+          "UnifiedReportingService",
+          "EnhancedAllureReporter",
+          "ExtentReportManager"
+        ],
+        "notes": "ExtentReportManager lives under Reports/, not Reporting/.",
+        "capabilities": [
+          "capability.reporting"
+        ]
+      },
+      {
+        "id": "module.keyword",
+        "name": "Keyword-driven",
+        "path": "src/QualiFrame.Framework/KeywordDriven",
+        "type": "library",
+        "purpose": "Keyword registry and Excel parser."
+      },
+      {
+        "id": "module.screenplay",
+        "name": "Screenplay",
+        "path": "src/QualiFrame.Framework/Screenplay",
+        "type": "library",
+        "purpose": "Actor/task/question abstractions."
+      },
+      {
+        "id": "module.core",
+        "name": "Core services",
+        "path": "src/QualiFrame.Framework/Core",
+        "type": "library",
+        "purpose": "ModularTestCase, DI, services, exceptions.",
+        "documentationReferences": [
+          "DOC-CORE-001",
+          "DOC-ARCH-001",
+          "DOC-AGENT-001",
+          "DOC-MEM-001"
+        ]
+      },
+      {
+        "id": "module.pdf",
+        "name": "PDF engine",
+        "path": "src/QualiFrame.Pdf.Core.Engine",
+        "type": "engine",
+        "purpose": "PdfPig extraction, comparison, plugin validators.",
+        "publicInterfaces": [
+          "PdfValidationEngine",
+          "AddQualiFramePdfValidationEngine"
+        ],
+        "capabilities": [
+          "capability.pdf"
+        ],
+        "documentationReferences": [
+          "DOC-PDF-001"
+        ]
+      },
+      {
+        "id": "module.mocking",
+        "name": "Mocking",
+        "path": "src/QualiFrame.Mocking",
+        "type": "library",
+        "purpose": "WireMock, OpenAPI stubs, hybrid flows.",
+        "capabilities": [
+          "capability.mocking",
+          "capability.contract"
+        ],
+        "documentationReferences": [
+          "DOC-API-001"
+        ]
+      },
+      {
+        "id": "module.tests",
+        "name": "Test implementation",
+        "path": "src/QualiFrame.Tests",
+        "type": "test",
+        "purpose": "Features, steps, hooks, page objects, examples.",
+        "documentationReferences": [
+          "DOC-README-001",
+          "DOC-BDD-001",
+          "DOC-HIGHLIGHTS-001"
+        ]
+      },
+      {
+        "id": "module.runner",
+        "name": "CLI runner",
+        "path": "src/QualiFrame.Runner",
+        "type": "runner",
+        "purpose": "CommandLineParser host over Runner.Core.",
+        "documentationReferences": [
+          "DOC-EXEC-001",
+          "DOC-RUN-001"
+        ]
+      },
+      {
+        "id": "module.runner.core",
+        "name": "Runner core",
+        "path": "src/QualiFrame.Runner.Core",
+        "type": "runner",
+        "purpose": "dotnet test orchestration without a Tests project reference."
+      },
+      {
+        "id": "module.config",
+        "name": "Configuration",
+        "path": "src/QualiFrame.Framework/Configuration",
+        "type": "configuration",
+        "purpose": "TestConfiguration and validation.",
+        "documentationReferences": [
+          "DOC-CFG-001",
+          "DOC-LICENSE-001",
+          "DOC-CHANGELOG-001",
+          "DOC-CI-001",
+          "DOC-GUIDE-001",
+          "DOC-MANIFEST-001",
+          "DOC-ARCHIVE-001",
+          "DOC-SKILLS-001"
+        ]
+      },
+      {
+        "id": "module.security",
+        "name": "Security/secrets",
+        "path": "src/QualiFrame.Framework/Security",
+        "type": "library",
+        "purpose": "AES secrets manager, optional Key Vault, ZAP helper."
+      },
+      {
+        "id": "module.healenium",
+        "name": "Healenium self-healing",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs",
+        "type": "library",
+        "purpose": "WebDriver wrapper that inits SHA reports, saves selectors to POST /healenium, and persists healing via POST /healenium/healing. Optional local stack: healenium/docker-compose.yml.",
+        "status": "implemented",
+        "documentationReferences": [
+          "DOC-HEAL-001",
+          "DOC-HEALINFRA-001"
+        ]
+      }
+    ]
+  },
+  "reusableComponents": {
+    "summary": "Reuse these before creating new helpers.",
+    "items": [
+      {
+        "id": "component.web.driverFactory",
+        "name": "EnhancedWebDriverFactory",
+        "moduleReference": "module.web.core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs",
+        "signature": "CreateDriver(); GetDriver(); SetCurrentDriver(IWebDriver); GetWebDriverWait(); TakeScreenshot(); QuitDriver(); CloseDriver()",
+        "usageGuidance": "Primary browser lifecycle API. Wrap is applied automatically when Healenium is enabled.",
+        "supportedApproaches": [
+          "approach.modular",
+          "approach.bdd",
+          "approach.hybrid"
+        ]
+      },
+      {
+        "id": "component.web.click",
+        "name": "click",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/Web/Elements/IEnhancedElement.cs",
+        "signature": "IEnhancedElement.Click(int retryCount = 3)",
+        "usageGuidance": "Prefer EnhancedWebElement/BasePage.ClickElement over raw IWebElement.Click in new code.",
+        "supportedApproaches": [
+          "approach.modular",
+          "approach.bdd",
+          "approach.keywordDriven",
+          "approach.screenplay"
+        ]
+      },
+      {
+        "id": "component.web.type",
+        "name": "type",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/Web/Elements/IEnhancedElement.cs",
+        "signature": "IEnhancedElement.SendKeys(string text, int retryCount = 3)",
+        "usageGuidance": "Also BasePage.SendKeys(By, text) and Screenplay Type task / TypeKeyword."
+      },
+      {
+        "id": "component.web.wait",
+        "name": "waits",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/PageBases/BasePage.cs",
+        "signature": "WaitForVisible/WaitForClickable via IEnhancedElement; BasePage FindElement uses ExpectedConditions",
+        "usageGuidance": "Do not add Thread.Sleep for element sync."
+      },
+      {
+        "id": "component.web.windowFrame",
+        "name": "window/frame/alert helpers",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/PageBases/BasePage.cs",
+        "signature": "SwitchToWindow; SwitchToFrame; SwitchToParentFrame; AcceptAlert/DismissAlert",
+        "usageGuidance": "Reuse BasePage window/frame/alert helpers. WebPage.SwitchTabIssue is application-specific demo logic, not a framework API."
+      },
+      {
+        "id": "component.web.navigate",
+        "name": "navigate",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/PageBases/BasePage.cs",
+        "signature": "BasePage navigation helpers; Screenplay Tasks.Navigate; NavigateKeyword"
+      },
+      {
+        "id": "component.web.screenshot",
+        "name": "screenshot",
+        "moduleReference": "module.web.core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs",
+        "signature": "string? TakeScreenshot(IWebDriver driver, string fileName)",
+        "usageGuidance": "Hooks already capture failure screenshots; reuse factory/page helpers."
+      },
+      {
+        "id": "component.web.selfHealing",
+        "name": "HealeniumDriverWrapper",
+        "moduleReference": "module.web.core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs",
+        "signature": "IWebDriver FindElement/FindElements intercept",
+        "usageGuidance": "Enable via Healenium:Enabled. Successful finds persist versioned evidence under Healenium:EvidencePath. Healing scores current DOM against historical baselines and accepts a candidate only at/above Healenium:ScoreCap. Official /healenium APIs still receive save/heal/report calls."
+      },
+      {
+        "id": "component.web.driverPool",
+        "name": "DriverPool",
+        "moduleReference": "module.web.core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/DriverPool.cs",
+        "signature": "DriverPoolManager.Instance; GetDriver/ReturnDriver/Cleanup",
+        "usageGuidance": "Pool size follows MaxParallelTests."
+      },
+      {
+        "id": "component.web.visualTester",
+        "name": "VisualTester",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/Web/Visual/VisualTester.cs",
+        "signature": "VisualTestResult CompareWithBaseline(IWebDriver driver, string testName)",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/VisualTesterExample.cs"
+        ]
+      },
+      {
+        "id": "component.web.accessibility",
+        "name": "AccessibilityTester",
+        "moduleReference": "module.web.pages",
+        "path": "src/QualiFrame.Framework/Web/Accessibility/AccessibilityTester.cs",
+        "signature": "RunAccessibilityCheck(); AssertNoViolations(); AssertNoCriticalViolations()",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/AccessibilityTest.cs"
+        ]
+      },
+      {
+        "id": "component.api.restClient",
+        "name": "EnhancedApiClient",
+        "moduleReference": "module.api",
+        "path": "src/QualiFrame.Framework/API/EnhancedApiClient.cs",
+        "signature": "GetAsync/PostAsync/PutAsync/DeleteAsync/PatchAsync; SetAuthenticationToken; ValidateResponse",
+        "supportedApproaches": [
+          "approach.bdd",
+          "approach.modular"
+        ]
+      },
+      {
+        "id": "component.api.retry",
+        "name": "RetryPolicy/CircuitBreaker",
+        "moduleReference": "module.api",
+        "path": "src/QualiFrame.Framework/API/EnhancedApiClient.cs",
+        "usageGuidance": "API retries use Polly; do not add a parallel HTTP retry utility."
+      },
+      {
+        "id": "component.api.graphql",
+        "name": "GraphQLClient",
+        "moduleReference": "module.api",
+        "path": "src/QualiFrame.Framework/API/GraphQL/GraphQLClient.cs",
+        "signature": "QueryAsync(query, variables?); MutateAsync(mutation, variables?); SetAuthenticationToken; SetHeader",
+        "usageGuidance": "Endpoint from APITesting:GraphQLEndpoint or constructor argument. Pair with QueryBuilder. See GraphQL.feature.",
+        "supportedApproaches": [
+          "approach.modular",
+          "approach.bdd"
+        ]
+      },
+      {
+        "id": "component.api.grpc",
+        "name": "GrpcChannelFactory",
+        "moduleReference": "module.api",
+        "path": "src/QualiFrame.Framework/API/Grpc/GrpcChannelFactory.cs",
+        "signature": "IsConfigured(); CreateChannel(address?)",
+        "usageGuidance": "Opt-in. No proto stubs in-repo; pass your own generated clients the returned channel."
+      },
+      {
+        "id": "component.api.websocket",
+        "name": "WebSocketTestClient",
+        "moduleReference": "module.api",
+        "path": "src/QualiFrame.Framework/API/WebSocket/WebSocketTestClient.cs",
+        "signature": "ConnectAsync(url?); SendTextAsync; ReceiveTextAsync",
+        "usageGuidance": "Opt-in. Requires APITesting:WebSocket:Url or an explicit URL."
+      },
+      {
+        "id": "component.messaging.kafka",
+        "name": "KafkaMessageClient",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Messaging/KafkaMessageClient.cs",
+        "signature": "ProduceAsync(key, value); Consume(groupId, timeout)",
+        "usageGuidance": "Opt-in. Requires Messaging:Kafka:BootstrapServers. Do not add a second Kafka wrapper."
+      },
+      {
+        "id": "component.observability.otel",
+        "name": "TelemetryBootstrap",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Observability/TelemetryBootstrap.cs",
+        "signature": "Initialize(); Shutdown()",
+        "usageGuidance": "No-op unless Observability:OpenTelemetry:Enabled is true."
+      },
+      {
+        "id": "component.storage.artifacts",
+        "name": "ArtifactStorageClient",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Storage/ArtifactStorageClient.cs",
+        "signature": "UploadToS3Async; UploadToAzureBlobAsync",
+        "usageGuidance": "Opt-in artifact upload. Never copy connection strings into the manifest."
+      },
+      {
+        "id": "component.mobile.driverFactory",
+        "name": "AppiumDriverFactory",
+        "moduleReference": "module.mobile",
+        "path": "src/QualiFrame.Framework/Utilities/Mobile/AppiumDriverFactory.cs",
+        "signature": "CreateOptions(); CreateDriver(); GetDriver(); QuitDriver()",
+        "usageGuidance": "Primary mobile session API. MobileSteps already uses it."
+      },
+      {
+        "id": "component.mobile.context",
+        "name": "MobileContextSwitcher",
+        "moduleReference": "module.mobile",
+        "path": "src/QualiFrame.Framework/Mobile/Utilities/MobileContextSwitcher.cs",
+        "signature": "SwitchToWebView(); SwitchToNative(); HasWebView()",
+        "usageGuidance": "Use for hybrid WEBVIEW/native switching. Inconclusive when no WEBVIEW exists."
+      },
+      {
+        "id": "component.data.synthetic",
+        "name": "SyntheticTestDataFactory",
+        "moduleReference": "module.tests",
+        "path": "src/QualiFrame.Tests/Utilities/SyntheticTestDataFactory.cs",
+        "signature": "CreateUser(seed); CreateAnonymous<T>()",
+        "usageGuidance": "Bogus + AutoFixture live in the test project only. Do not add those packages to Framework."
+      },
+      {
+        "id": "component.data.repositoryFactory",
+        "name": "DataRepositoryFactory",
+        "moduleReference": "module.data",
+        "path": "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs",
+        "signature": "IDataRepository CreateRepository(string? sourceType = null)",
+        "parameters": [
+          {
+            "name": "sourceType",
+            "type": "string",
+            "required": false,
+            "default": "EXCEL",
+            "description": "EXCEL, CSV, JSON, or SQL/SQLSERVER/MSSQL/DATABASE. Unknown values fall back to Excel."
+          }
+        ],
+        "returns": "IDataRepository"
+      },
+      {
+        "id": "component.data.sqlRepository",
+        "name": "SqlDataRepository",
+        "moduleReference": "module.data",
+        "path": "src/QualiFrame.Framework/Data/Repositories/SqlDataRepository.cs",
+        "signature": "GetTestData(testCaseId, tableName?); GetAllTestData(tableName?)",
+        "usageGuidance": "Opt-in only. Do not use as the default repository. Requires Environments:QA:DatabaseConnectionString. Table names must be Table or schema.Table identifiers.",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Unit/SqlDataRepositoryTests.cs"
+        ]
+      },
+      {
+        "id": "component.web.videoRecording",
+        "name": "VideoRecordingManager",
+        "moduleReference": "module.web.core",
+        "path": "src/QualiFrame.Framework/Utilities/WebDriver/VideoRecordingManager.cs",
+        "signature": "TryStart(IWebDriver); Stop()",
+        "usageGuidance": "No-op unless TestConfiguration:VideoRecording is true. Wired from EnhancedWebDriverFactory; do not add a second recorder."
+      },
+      {
+        "id": "component.reporting.unified",
+        "name": "UnifiedReportingService",
+        "moduleReference": "module.reporting",
+        "path": "src/QualiFrame.Framework/Reporting/UnifiedReportingService.cs",
+        "signature": "GetInstance(); StartFeature; StartTestCase; LogStep; CompleteTestCase; AddScreenshot; Flush",
+        "usageGuidance": "BDD hooks use this path. ModularTestCase currently constructs ReportingService with classic AllureReporter."
+      },
+      {
+        "id": "component.reporting.extent",
+        "name": "ExtentReportManager",
+        "moduleReference": "module.reporting",
+        "path": "src/QualiFrame.Framework/Reports/ExtentReportManager.cs",
+        "signature": "CreateTest; LogInfo/LogPass/LogFail; AddScreenshot; Flush",
+        "usageGuidance": "Thread-safe Extent facade (AsyncLocal). Prefer UnifiedReportingService when Extent and Allure must stay aligned."
+      },
+      {
+        "id": "component.logging.logger",
+        "name": "Logger",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Utilities/Logging/Logger.cs",
+        "signature": "Debug/Information/Warning/Error/Fatal; SetCorrelationId",
+        "usageGuidance": "Serilog facade with SensitiveDataMasker."
+      },
+      {
+        "id": "component.mobile.gestures",
+        "name": "GestureActions",
+        "moduleReference": "module.mobile",
+        "path": "src/QualiFrame.Framework/Mobile/Utilities/GestureActions.cs",
+        "signature": "Swipe/SwipeUp/Down/Left/Right; Pinch; Zoom; LongPress; Tap; DoubleTap"
+      },
+      {
+        "id": "component.desktop.actions",
+        "name": "DesktopActions",
+        "moduleReference": "module.desktop",
+        "path": "src/QualiFrame.Framework/Desktop/Actions/DesktopActions.cs",
+        "usageGuidance": "Also SmartDesktopActions, Dialog/Menu/Grid/Tree/Ribbon helpers."
+      },
+      {
+        "id": "component.desktop.session",
+        "name": "DesktopSessionFactory",
+        "moduleReference": "module.desktop",
+        "path": "src/QualiFrame.Framework/Desktop/Drivers/DesktopSessionFactory.cs",
+        "signature": "GetSession(); Quit()",
+        "usageGuidance": "Call only from DesktopHooks or page/session construction when a desktop scenario runs. Do not start a FlaUI session in BeforeTestRun."
+      },
+      {
+        "id": "component.keyword.registry",
+        "name": "KeywordRegistry",
+        "moduleReference": "module.keyword",
+        "path": "src/QualiFrame.Framework/KeywordDriven/KeywordRegistry.cs",
+        "signature": "Instance.RegisterKeyword; GetKeyword; GetAllKeywords",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/KeywordDrivenTest.cs"
+        ]
+      },
+      {
+        "id": "component.screenplay.actor",
+        "name": "Actor",
+        "moduleReference": "module.screenplay",
+        "path": "src/QualiFrame.Framework/Screenplay/Actor.cs",
+        "signature": "Actor.Named(name); Can/AttemptsTo/AsksFor",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/ScreenplayTest.cs"
+        ]
+      },
+      {
+        "id": "component.mocking.wiremock",
+        "name": "WireMockServerManager",
+        "moduleReference": "module.mocking",
+        "path": "src/QualiFrame.Mocking/Server/WireMockServerManager.cs",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Integration/Mocking/SampleSwaggerDrivenMockTest.cs"
+        ]
+      },
+      {
+        "id": "component.pdf.engine",
+        "name": "PdfValidationEngine",
+        "moduleReference": "module.pdf",
+        "path": "src/QualiFrame.Pdf.Core.Engine/Engine/PdfValidationEngine.cs",
+        "signature": "AddQualiFramePdfValidationEngine(); PdfValidationEngine pipeline",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/PDFTests/PdfValidationEngineTests.cs"
+        ]
+      },
+      {
+        "id": "component.security.secrets",
+        "name": "SecretsManager",
+        "moduleReference": "module.security",
+        "path": "src/QualiFrame.Framework/Security/SecretsManager.cs",
+        "usageGuidance": "AES via Security:EncryptionKey; Azure Key Vault when Security:KeyVault:Url is set. Never log raw secrets."
+      },
+      {
+        "id": "component.cloud.platformFactory",
+        "name": "CloudPlatformFactory",
+        "moduleReference": "module.cloud",
+        "path": "src/QualiFrame.Framework/Cloud/CloudPlatformFactory.cs",
+        "signature": "ICloudPlatform? GetActivePlatform(TestConfiguration config)"
+      },
+      {
+        "id": "component.core.modularTestCase",
+        "name": "ModularTestCase",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Core/ModularTestCase.cs",
+        "signature": "abstract SetUp/ExecuteTest/TearDown; [Test] RunTest()",
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/LoginModularTest.cs"
+        ]
+      },
+      {
+        "id": "component.core.di",
+        "name": "AddQualiFrameServices",
+        "moduleReference": "module.core",
+        "path": "src/QualiFrame.Framework/Core/DependencyInjection/ServiceCollectionExtensions.cs",
+        "signature": "IServiceCollection.AddQualiFrameServices()"
+      }
+    ]
+  },
+  "dataManagement": {
+    "summary": "File-backed repositories (Excel, CSV, JSON) plus Gherkin Examples, with opt-in SQL Server via SqlDataRepository.",
+    "formats": [
+      "Excel",
+      "CSV",
+      "JSON",
+      "SQL Server",
+      "Gherkin Examples"
+    ],
+    "locations": [
+      "src/QualiFrame.Tests/Data/FileValidation",
+      "src/QualiFrame.Tests/Configuration/pdf.validation.json"
+    ],
+    "readers": [
+      "component.data.repositoryFactory"
+    ],
+    "factories": [
+      "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs"
+    ],
+    "generators": {
+      "status": "implemented",
+      "packages": [
+        "Bogus",
+        "AutoFixture"
+      ],
+      "notes": "SyntheticTestDataFactory in QualiFrame.Tests. Do not add Bogus/AutoFixture to the Framework project."
+    },
+    "parameterization": "Reqnroll Scenario Outline Examples; IDataRepository.GetTestData(testCaseId); keyword Excel steps.",
+    "masking": "Logger uses SensitiveDataMasker. SecretsManager encrypts values at rest.",
+    "cleanup": "Driver/pool cleanup in hooks; no dedicated test-data teardown factory.",
+    "precedence": "Factory sourceType argument, else default EXCEL.",
+    "notes": [
+      "Checked-in Data/ is mostly PDF fixtures; general Excel/CSV packs are not in repo.",
+      "KeywordDrivenTest skips when Excel is missing.",
+      "SQL is opt-in (SQL/SQLSERVER/MSSQL/DATABASE). Default factory type remains Excel."
+    ]
+  },
+  "configuration": {
+    "summary": "JSON appsettings loaded by TestConfiguration singleton; env vars override JSON; Extent and Allure have additional overrides.",
+    "sources": [
+      "src/QualiFrame.Framework/Configuration/appsettings.json",
+      "extent.properties",
+      "src/QualiFrame.Tests/allureConfig.json",
+      "src/QualiFrame.Tests/reqnroll.json",
+      "src/QualiFrame.Mocking/appsettings.Mocking.json",
+      "src/QualiFrame.Tests/Configuration/pdf.validation.json"
+    ],
+    "precedence": [
+      "extent.properties overrides JSON for Extent-only keys",
+      "ALLURE_RESULTS_DIRECTORY overrides Allure output directory",
+      "Environment variables override JSON (AddEnvironmentVariables last)",
+      "appsettings.{ASPNETCORE_ENVIRONMENT}.json over base JSON when present",
+      "Code defaults in TestConfiguration getters"
+    ],
+    "secretHandling": "Do not store secret values here. Use SecretsManager (AES) and optional Azure Key Vault URL.",
+    "settings": [
+      {
+        "id": "config.browser",
+        "name": "TestConfiguration:Browser",
+        "purpose": "Local browser name",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "TestConfiguration:Browser",
+        "default": "Chrome",
+        "overrideMechanism": "JSON or environment variable",
+        "sensitivity": "none",
+        "consumers": [
+          "EnhancedWebDriverFactory"
+        ]
+      },
+      {
+        "id": "config.headless",
+        "name": "TestConfiguration:Headless",
+        "purpose": "Headless Chrome/Edge",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "TestConfiguration:Headless",
+        "default": false,
+        "sensitivity": "none",
+        "consumers": [
+          "EnhancedWebDriverFactory"
+        ]
+      },
+      {
+        "id": "config.videoRecording",
+        "name": "TestConfiguration:VideoRecording",
+        "purpose": "Opt-in screenshot-sequence / cloud video flag",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "TestConfiguration:VideoRecording",
+        "default": false,
+        "sensitivity": "none",
+        "notes": "Wired to VideoRecordingManager (local frames under Results/Videos) and cloud Video option only when true."
+      },
+      {
+        "id": "config.parallel.enable",
+        "name": "TestConfiguration:ParallelExecution:Enable",
+        "purpose": "Parallel toggle consumed by TestConfiguration and RunnerConfiguration",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "TestConfiguration:ParallelExecution:Enable",
+        "default": true,
+        "overrideMechanism": "Nested JSON key first; legacy ParallelExecution:Enable still honored",
+        "sensitivity": "none",
+        "notes": "Getters read TestConfiguration:ParallelExecution:* then fall back to root ParallelExecution:*."
+      },
+      {
+        "id": "config.healenium.enabled",
+        "name": "Healenium:Enabled",
+        "purpose": "Wrap WebDriver with HealeniumDriverWrapper",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Healenium:Enabled",
+        "default": true,
+        "overrideMechanism": "JSON; getter falls back to false if the key is missing",
+        "notes": "Shipped appsettings.json sets Enabled true. Start the Healenium backend at Healenium:BackendUrl, or set Enabled false for local runs without healing.",
+        "sensitivity": "none",
+        "consumers": [
+          "EnhancedWebDriverFactory"
+        ]
+      },
+      {
+        "id": "config.healenium.backendUrl",
+        "name": "Healenium:BackendUrl",
+        "purpose": "Healenium backend endpoint",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Healenium:BackendUrl",
+        "default": "http://localhost:7878",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.healenium.imitatorUrl",
+        "name": "Healenium:ImitatorUrl",
+        "purpose": "Selector-imitator endpoint used when healing locators",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Healenium:ImitatorUrl",
+        "default": "http://localhost:8000",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.healenium.scoreCap",
+        "name": "Healenium:ScoreCap",
+        "purpose": "Minimum confidence to accept a healed locator",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Healenium:ScoreCap",
+        "default": 0.5,
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.healenium.evidencePath",
+        "name": "Healenium:EvidencePath",
+        "purpose": "Versioned locator evidence and healing audit directory",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Healenium:EvidencePath",
+        "default": "Results/HealeniumEvidence",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.reporting.extent",
+        "name": "Reporting:ExtentReport:Enable",
+        "purpose": "Enable Extent HTML",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Reporting:ExtentReport:Enable",
+        "default": true,
+        "overrideMechanism": "extent.properties can override Extent paths/theme",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.reporting.allure",
+        "name": "Reporting:AllureReport:Enable",
+        "purpose": "Enable Allure results",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Reporting:AllureReport:Enable",
+        "default": true,
+        "overrideMechanism": "ALLURE_RESULTS_DIRECTORY for output folder",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.screenshots",
+        "name": "Reporting:Screenshots:Path",
+        "purpose": "Screenshot directory",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Reporting:Screenshots:Path",
+        "default": "Results/Screenshots",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.environments.baseUrl",
+        "name": "Environments:QA:BaseUrl",
+        "purpose": "Web application base URL",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Environments:QA:BaseUrl",
+        "sensitivity": "none",
+        "consumers": [
+          "TestConfiguration.BaseUrl"
+        ]
+      },
+      {
+        "id": "config.environments.apiBaseUrl",
+        "name": "Environments:QA:ApiBaseUrl",
+        "purpose": "REST API base URL",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Environments:QA:ApiBaseUrl",
+        "sensitivity": "none",
+        "consumers": [
+          "EnhancedApiClient",
+          "APISteps"
+        ]
+      },
+      {
+        "id": "config.api.graphqlEndpoint",
+        "name": "APITesting:GraphQLEndpoint",
+        "purpose": "GraphQL endpoint used by GraphQLClient when no constructor URL is passed",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "APITesting:GraphQLEndpoint",
+        "default": "",
+        "sensitivity": "none",
+        "consumers": [
+          "GraphQLClient"
+        ]
+      },
+      {
+        "id": "config.cloud.browserstack",
+        "name": "CloudTesting:BrowserStack:Enable",
+        "purpose": "Enable BrowserStack (highest cloud priority)",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "CloudTesting:BrowserStack:Enable",
+        "default": false,
+        "sensitivity": "secretReference",
+        "notes": "Username/AccessKey are secret references; never copy values into this manifest."
+      },
+      {
+        "id": "config.mobile.appium",
+        "name": "Mobile:AppiumServerUrl",
+        "purpose": "Appium server URL",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Mobile:AppiumServerUrl",
+        "default": "http://localhost:4723",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.desktop.appId",
+        "name": "Desktop:AppId",
+        "purpose": "Desktop AUT executable path or Store AUMID for FlaUI",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Desktop:AppId",
+        "default": "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.desktop.automationType",
+        "name": "Desktop:AutomationType",
+        "purpose": "FlaUI backend: UIA3 (default) or UIA2",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Desktop:AutomationType",
+        "default": "UIA3",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.desktop.launchMode",
+        "name": "Desktop:LaunchMode",
+        "purpose": "FlaUI launch strategy: Auto, Launch, Attach, or StoreApp",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Desktop:LaunchMode",
+        "default": "Auto",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.security.encryptionKey",
+        "name": "Security:EncryptionKey",
+        "purpose": "AES key for SecretsManager",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Security:EncryptionKey",
+        "sensitivity": "secretReference",
+        "notes": "Replace placeholder in local/CI secrets; never commit real keys."
+      },
+      {
+        "id": "config.security.keyVault",
+        "name": "Security:KeyVault:Url",
+        "purpose": "Optional Azure Key Vault",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Security:KeyVault:Url",
+        "sensitivity": "secretReference"
+      },
+      {
+        "id": "config.database.timeout",
+        "name": "Database:ConnectionTimeout",
+        "purpose": "SQL client timeout used by SqlDataRepository",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Database:ConnectionTimeout",
+        "default": 30,
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.database.connectionString",
+        "name": "Environments:QA:DatabaseConnectionString",
+        "purpose": "SQL Server connection used by SqlDataRepository",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Environments:QA:DatabaseConnectionString",
+        "default": "",
+        "sensitivity": "secretReference",
+        "notes": "Required for SQL/SQLSERVER/MSSQL/DATABASE factory types. Never copy the value into this manifest."
+      },
+      {
+        "id": "config.database.defaultTable",
+        "name": "Database:DefaultTable",
+        "purpose": "Default table identifier for SqlDataRepository when callers omit tableName",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Database:DefaultTable",
+        "default": "TestData",
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.smartTestSelection.enabled",
+        "name": "SmartTestSelection:Enabled",
+        "purpose": "ML test selector",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "SmartTestSelection:Enabled",
+        "default": false,
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.accessibility.enabled",
+        "name": "Accessibility:Enabled",
+        "purpose": "axe-core checks",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Accessibility:Enabled",
+        "default": false,
+        "sensitivity": "none"
+      },
+      {
+        "id": "config.applitools",
+        "name": "Applitools:ApiKey",
+        "purpose": "Deprecated leftover Eyes key (removed from appsettings and TestConfiguration)",
+        "source": "src/QualiFrame.Framework/Configuration/appsettings.json",
+        "key": "Applitools:ApiKey",
+        "sensitivity": "none",
+        "notes": "Eyes.Selenium and leftover Applitools:* keys were removed. Visual testing uses SkiaSharp VisualTester. Stable ID retained for agents that still search for this key."
+      }
+    ],
+    "notes": [
+      "TestConfiguration also has code fallbacks for SauceDemo demo users under TestData:DefaultUser; those keys are not in appsettings.json.",
+      "DatabaseConnectionString and cloud access keys are secret references."
+    ]
+  },
+  "execution": {
+    "summary": "Preferred invocation is the test project or TestsOnly filter. Custom CLI runner shells out to the same project.",
+    "local": {
+      "cli": [
+        "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj",
+        "dotnet test Qualiframe-CSharp-NUnit_v3.0-TestsOnly.slnf",
+        "dotnet run --project src/QualiFrame.Runner/QualiFrame.Runner.csproj"
+      ],
+      "ide": "Run NUnit tests from the QualiFrame.Tests project in Visual Studio / Rider / VS Code.",
+      "caveats": [
+        "Avoid solution-wide dotnet test when Microsoft.Testing.Platform and QualiFrame.Runner are both present.",
+        "Desktop tests are Windows-only. Category=Calculator is the shipped sample; Category=Desktop also runs a login template that does not match Calculator locators."
+      ]
+    },
+    "commands": [
+      {
+        "name": "restore-build",
+        "command": "dotnet restore && dotnet build",
+        "purpose": "Local compile"
+      },
+      {
+        "name": "test-project",
+        "command": "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj",
+        "purpose": "Preferred test run",
+        "when": "local and CI"
+      },
+      {
+        "name": "test-filter-web",
+        "command": "dotnet test Qualiframe-CSharp-NUnit_v3.0-TestsOnly.slnf --filter \"Category=Web\"",
+        "purpose": "Category filter"
+      },
+      {
+        "name": "test-filter-mocking",
+        "command": "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj --filter \"Category=Mocking\"",
+        "purpose": "Mocking integration samples"
+      },
+      {
+        "name": "test-filter-calculator",
+        "command": "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj --filter \"Category=Calculator\"",
+        "purpose": "Windows Calculator FlaUI sample (Windows-only)",
+        "when": "local Windows"
+      },
+      {
+        "name": "test-filter-desktop",
+        "command": "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj --filter \"Category=Desktop\"",
+        "purpose": "All @Desktop scenarios including the login template",
+        "when": "local Windows"
+      },
+      {
+        "name": "runner",
+        "command": "dotnet run --project src/QualiFrame.Runner/QualiFrame.Runner.csproj -- --filter \"Category=WebDemo\"",
+        "purpose": "CLI runner with filter"
+      },
+      {
+        "name": "runner-parallel",
+        "command": "dotnet run --project src/QualiFrame.Runner/QualiFrame.Runner.csproj -- --parallel",
+        "purpose": "CLI parallel flag"
+      },
+      {
+        "name": "coverage",
+        "command": "dotnet test src/QualiFrame.Tests/QualiFrame.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover",
+        "purpose": "Coverage"
+      },
+      {
+        "name": "ci-parity",
+        "command": "bash scripts/ci-build-test.sh",
+        "purpose": "CI-equivalent restore/build/test"
+      },
+      {
+        "name": "clean",
+        "command": "bash scripts/clean.sh",
+        "purpose": "Remove bin/obj/Results/TestResults"
+      },
+      {
+        "name": "allure",
+        "command": "allure generate Results/AllureResults -o Results/AllureReport --clean",
+        "purpose": "Generate Allure HTML"
+      },
+      {
+        "name": "validate-manifest",
+        "command": "bash scripts/ci-validate-manifest.sh",
+        "purpose": "CI/PR governance for FRAMEWORK_MANIFEST.json (installs jsonschema in a temp venv)"
+      }
+    ],
+    "filtering": {
+      "tags": "Reqnroll tags map to NUnit categories (for example @WebDemo -> Category=WebDemo).",
+      "categories": [
+        "Web",
+        "WebDemo",
+        "API",
+        "Mobile",
+        "Desktop",
+        "Calculator",
+        "Mocking"
+      ],
+      "examples": [
+        "--filter \"Category=WebDemo\"",
+        "--filter \"FullyQualifiedName~PdfValidationEngineTests\"",
+        "--filter \"Category=Mocking\"",
+        "--filter \"Category=Calculator\"",
+        "--filter \"Category=Desktop\""
+      ]
+    },
+    "headedHeadless": "TestConfiguration:Headless maps to Chrome/Edge --headless=new.",
+    "retries": "API Polly retries and element click/type retries exist. No global NUnit [Retry] policy found.",
+    "parallelization": "Assembly Parallelizable(ParallelScope.All) and LevelOfParallelism(4) in ParallelConfig.cs. Runner --parallel. Driver pool sized from MaxParallelTests.",
+    "containers": "Optional Healenium web stack at healenium/docker-compose.yml (backend 7878). Tests do not start it. DockerWireMockManager in Mocking.",
+    "remoteCloud": "CloudPlatformFactory plus TestConfiguration:RemoteWebDriverUrl.",
+    "cicd": {
+      "summary": "GitHub Actions, Azure DevOps, Jenkins, and GitLab CI share scripts/ci-build-test.sh targeting QualiFrame.Tests in Release. Manifest governance is scripts/ci-validate-manifest.sh (GitLab uses a python:3.12-slim job).",
+      "pipelines": [
+        {
+          "id": "cicd.github",
+          "name": "GitHub Actions",
+          "platform": "GitHub Actions",
+          "status": "implemented",
+          "pipelineFile": ".github/workflows/ci.yml",
+          "stages": [
+            "validate-manifest",
+            "checkout",
+            "setup-dotnet",
+            "build-and-test",
+            "upload-artifacts"
+          ],
+          "commands": [
+            "bash scripts/ci-validate-manifest.sh",
+            "bash scripts/ci-build-test.sh"
+          ],
+          "artifacts": [
+            "test-results.trx",
+            "TestResults/**"
+          ],
+          "reports": [
+            "TRX",
+            "Coverlet"
+          ]
+        },
+        {
+          "id": "cicd.azure",
+          "name": "Azure DevOps",
+          "platform": "Azure DevOps",
+          "status": "implemented",
+          "pipelineFile": "azure-pipelines.yml",
+          "stages": [
+            "checkout",
+            "validate-manifest",
+            "UseDotNet",
+            "build-and-test",
+            "publish-results"
+          ],
+          "commands": [
+            "bash scripts/ci-validate-manifest.sh",
+            "bash scripts/ci-build-test.sh"
+          ],
+          "artifacts": [
+            "TRX",
+            "src/QualiFrame.Tests/TestResults"
+          ],
+          "reports": [
+            "VSTest",
+            "coverage"
+          ]
+        },
+        {
+          "id": "cicd.jenkins",
+          "name": "Jenkins",
+          "platform": "Jenkins",
+          "status": "implemented",
+          "pipelineFile": "Jenkinsfile",
+          "stages": [
+            "Checkout",
+            "Validate Manifest",
+            "Build and Test",
+            "Publish Results"
+          ],
+          "commands": [
+            "bash scripts/ci-validate-manifest.sh",
+            "bash scripts/ci-build-test.sh"
+          ],
+          "artifacts": [
+            "Results/**/*"
+          ],
+          "reports": [
+            "junit TRX",
+            "HTML Results/Reports"
+          ]
+        },
+        {
+          "id": "cicd.gitlab",
+          "name": "GitLab CI",
+          "platform": "GitLab",
+          "status": "implemented",
+          "pipelineFile": ".gitlab-ci.yml",
+          "stages": [
+            "validate",
+            "build-and-test",
+            "report"
+          ],
+          "commands": [
+            "python scripts/validate-framework-manifest.py",
+            "bash scripts/ci-build-test.sh"
+          ],
+          "artifacts": [
+            "test-results.trx",
+            "**/TestResults/**",
+            "Results/**"
+          ],
+          "notes": "Validate job uses python:3.12-slim. Build/test uses mcr.microsoft.com/dotnet/sdk:10.0 and the same QualiFrame.Tests target as GitHub/Azure/Jenkins; ci-build-test.sh exercises net8.0, net9.0, and net10.0."
+        },
+        {
+          "id": "cicd.azure.githubWorkflow",
+          "name": "Legacy Azure workflow YAML",
+          "platform": "Azure DevOps via GitHub workflow file",
+          "status": "deprecated",
+          "pipelineFile": ".github/workflows/azure-devops.yml",
+          "notes": "Windows image and .NET 8; azure-pipelines.yml is the current Azure entry."
+        }
+      ]
+    },
+    "notes": [
+      "run-tests.sh, run-tests.bat, and start-appium.bat exist at repo root."
+    ]
+  },
+  "lifecycle": {
+    "summary": "BDD uses Reqnroll hooks; modular tests use ModularTestCase SetUp/RunTest/TearDown.",
+    "flow": "Configuration -> Initialization -> Discovery -> Setup -> Execution -> Validation -> Evidence Collection -> Reporting -> Cleanup -> Teardown",
+    "stages": [
+      {
+        "id": "lifecycle.configuration",
+        "name": "Configuration",
+        "order": 1,
+        "status": "implemented",
+        "description": "TestConfiguration loads JSON and env; ConfigurationValidator can fail fast.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Configuration/TestConfiguration.cs",
+          "src/QualiFrame.Framework/Configuration/ConfigurationValidator.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.initialization",
+        "name": "Initialization",
+        "order": 2,
+        "status": "implemented",
+        "description": "BeforeTestRun initializes logging, encoding, Allure directory, and Extent. FlaUI desktop sessions are not started here.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs"
+        ],
+        "hooks": [
+          {
+            "name": "BeforeTestRun",
+            "path": "src/QualiFrame.Tests/Hooks/Hooks.cs",
+            "scope": "test run"
+          }
+        ]
+      },
+      {
+        "id": "lifecycle.discovery",
+        "name": "Discovery",
+        "order": 3,
+        "status": "implemented",
+        "description": "NUnit/Reqnroll discover tests; Runner applies --filter.",
+        "implementationReferences": [
+          "src/QualiFrame.Runner.Core/TestRunnerOptions.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.setup",
+        "name": "Setup",
+        "order": 4,
+        "status": "implemented",
+        "description": "BeforeScenario creates WebDriver unless API-only; DesktopHooks/DesktopSessionFactory start FlaUI only for desktop sessions.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs",
+          "src/QualiFrame.Tests/Hooks/DesktopHooks.cs",
+          "src/QualiFrame.Framework/Core/ModularTestCase.cs"
+        ],
+        "hooks": [
+          {
+            "name": "BeforeScenario",
+            "path": "src/QualiFrame.Tests/Hooks/Hooks.cs",
+            "scope": "scenario"
+          },
+          {
+            "name": "BeforeDesktopScenario",
+            "path": "src/QualiFrame.Tests/Hooks/DesktopHooks.cs",
+            "scope": "@Desktop"
+          }
+        ]
+      },
+      {
+        "id": "lifecycle.execution",
+        "name": "Execution",
+        "order": 5,
+        "status": "implemented",
+        "description": "Reqnroll steps or ModularTestCase.ExecuteTest.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/StepDefinitions",
+          "src/QualiFrame.Framework/Core/ModularTestCase.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.validation",
+        "name": "Validation",
+        "order": 6,
+        "status": "implemented",
+        "description": "NUnit/FluentAssertions; API schema helpers; PDF validators; axe/visual helpers.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/SchemaValidator.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.evidence",
+        "name": "Evidence Collection",
+        "order": 7,
+        "status": "implemented",
+        "description": "Failure screenshots in AfterScenario; optional step screenshots.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.reporting",
+        "name": "Reporting",
+        "order": 8,
+        "status": "implemented",
+        "description": "Extent/Allure via UnifiedReportingService in BDD; ModularTestCase uses ReportingService.",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Reporting/UnifiedReportingService.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.cleanup",
+        "name": "Cleanup",
+        "order": 9,
+        "status": "implemented",
+        "description": "CloseDriver/Quit; DesktopHooks quits Windows driver; MockServerFixture teardown.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs",
+          "src/QualiFrame.Mocking/Fixtures/MockServerFixture.cs"
+        ]
+      },
+      {
+        "id": "lifecycle.teardown",
+        "name": "Teardown",
+        "order": 10,
+        "status": "implemented",
+        "description": "AfterTestRun flushes reports.",
+        "implementationReferences": [
+          "src/QualiFrame.Tests/Hooks/Hooks.cs"
+        ],
+        "hooks": [
+          {
+            "name": "AfterTestRun",
+            "path": "src/QualiFrame.Tests/Hooks/Hooks.cs",
+            "scope": "test run"
+          }
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "summary": "Curated NuGet inventory preserved from the previous manifest.",
+    "versionNotes": [
+      "NUnit is 4.4.0 in QualiFrame.Framework and 4.6.0 in QualiFrame.Tests.",
+      "Confluent.Kafka is 2.12.0 in Framework and 2.14.0 in Tests."
+    ],
+    "removedOrReplaced": [
+      {
+        "name": "EPPlus",
+        "reason": "license",
+        "replacement": "ClosedXML"
+      },
+      {
+        "name": "SixLabors.ImageSharp",
+        "reason": "license",
+        "replacement": "SkiaSharp"
+      },
+      {
+        "name": "iText7",
+        "reason": "AGPL/commercial",
+        "replacement": "PdfPig in QualiFrame.Pdf.Core.Engine"
+      },
+      {
+        "name": "NBomber",
+        "reason": "commercial licensing",
+        "replacement": "external k6/JMeter in CI"
+      },
+      {
+        "name": "Eyes.Selenium (Applitools)",
+        "reason": "commercial",
+        "replacement": "SkiaSharp visual testing"
+      }
+    ],
+    "items": [
+      {
+        "id": "dep.selenium.webdriver",
+        "name": "Selenium.WebDriver",
+        "category": "coreAutomation",
+        "version": "4.43.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.selenium.support",
+        "name": "Selenium.Support",
+        "category": "coreAutomation",
+        "version": "4.43.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.selenium.chrome",
+        "name": "Selenium.WebDriver.ChromeDriver",
+        "category": "coreAutomation",
+        "version": "143.0.7499.14600",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.selenium.gecko",
+        "name": "Selenium.WebDriver.GeckoDriver",
+        "category": "coreAutomation",
+        "version": "0.36.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.selenium.edge",
+        "name": "Selenium.WebDriver.MSEdgeDriver",
+        "category": "coreAutomation",
+        "version": "141.0.3537.71",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.selenium.waithelpers",
+        "name": "SeleniumExtras.WaitHelpers",
+        "category": "coreAutomation",
+        "version": "1.0.2",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.appium",
+        "name": "Appium.WebDriver",
+        "category": "mobile",
+        "version": "8.2.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.flaui.core",
+        "name": "FlaUI.Core",
+        "category": "desktop",
+        "version": "5.0.0",
+        "projects": [
+          "QualiFrame.Framework"
+        ]
+      },
+      {
+        "id": "dep.flaui.uia3",
+        "name": "FlaUI.UIA3",
+        "category": "desktop",
+        "version": "5.0.0",
+        "projects": [
+          "QualiFrame.Framework"
+        ]
+      },
+      {
+        "id": "dep.flaui.uia2",
+        "name": "FlaUI.UIA2",
+        "category": "desktop",
+        "version": "5.0.0",
+        "projects": [
+          "QualiFrame.Framework"
+        ]
+      },
+      {
+        "id": "dep.nunit",
+        "name": "NUnit",
+        "category": "testRunner",
+        "version": "4.6.0",
+        "projects": [
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ],
+        "alternateVersion": "4.4.0",
+        "alternateProjects": [
+          "QualiFrame.Framework"
+        ]
+      },
+      {
+        "id": "dep.nunit.adapter",
+        "name": "NUnit3TestAdapter",
+        "category": "testRunner",
+        "version": "6.2.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.nunit.analyzers",
+        "name": "NUnit.Analyzers",
+        "category": "testRunner",
+        "version": "4.13.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.testsdk",
+        "name": "Microsoft.NET.Test.Sdk",
+        "category": "testRunner",
+        "version": "18.5.1",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.fluentassertions",
+        "name": "FluentAssertions",
+        "category": "assertions",
+        "version": "8.9.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.reqnroll",
+        "name": "Reqnroll",
+        "category": "bdd",
+        "version": "3.3.4",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.reqnroll.nunit",
+        "name": "Reqnroll.NUnit",
+        "category": "bdd",
+        "version": "3.3.4",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.reqnroll.msbuild",
+        "name": "Reqnroll.Tools.MsBuild.Generation",
+        "category": "bdd",
+        "version": "3.3.4",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.bodi",
+        "name": "BoDi",
+        "category": "bdd",
+        "version": "1.5.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.restsharp",
+        "name": "RestSharp",
+        "category": "api",
+        "version": "113.0.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.graphql",
+        "name": "GraphQL.Client",
+        "category": "api",
+        "version": "6.1.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.graphql.newtonsoft",
+        "name": "GraphQL.Client.Serializer.Newtonsoft",
+        "category": "api",
+        "version": "6.1.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.grpc.client",
+        "name": "Grpc.Net.Client",
+        "category": "api",
+        "version": "2.71.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.grpc.tools",
+        "name": "Grpc.Tools",
+        "category": "api",
+        "version": "2.76.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.sqlclient",
+        "name": "Microsoft.Data.SqlClient",
+        "category": "database",
+        "version": "6.1.3",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.closedxml",
+        "name": "ClosedXML",
+        "category": "data",
+        "version": "0.105.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.csvhelper",
+        "name": "CsvHelper",
+        "category": "data",
+        "version": "33.1.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.extent",
+        "name": "ExtentReports",
+        "category": "reporting",
+        "version": "5.0.4",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.allure.commons",
+        "name": "Allure.Net.Commons",
+        "category": "reporting",
+        "version": "2.15.0",
+        "projects": [
+          "QualiFrame.Framework"
+        ]
+      },
+      {
+        "id": "dep.allure.nunit",
+        "name": "Allure.NUnit",
+        "category": "reporting",
+        "version": "2.15.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.serilog",
+        "name": "Serilog",
+        "category": "logging",
+        "version": "4.3.1",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.serilog.console",
+        "name": "Serilog.Sinks.Console",
+        "category": "logging",
+        "version": "6.1.1",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.serilog.file",
+        "name": "Serilog.Sinks.File",
+        "category": "logging",
+        "version": "7.0.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.opentelemetry",
+        "name": "OpenTelemetry",
+        "category": "observability",
+        "version": "1.15.3",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ],
+        "status": "implemented",
+        "notes": "TelemetryBootstrap is opt-in via Observability:OpenTelemetry:Enabled (default false)."
+      },
+      {
+        "id": "dep.otel.console",
+        "name": "OpenTelemetry.Exporter.Console",
+        "category": "observability",
+        "version": "1.15.3",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.axe",
+        "name": "Selenium.Axe",
+        "category": "accessibility",
+        "version": "1.5.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.skiasharp",
+        "name": "SkiaSharp",
+        "category": "visual",
+        "version": "3.119.2",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Pdf.Core.Engine"
+        ]
+      },
+      {
+        "id": "dep.wiremock",
+        "name": "WireMock.Net",
+        "category": "mocking",
+        "version": "2.5.0",
+        "projects": [
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.openapi",
+        "name": "Microsoft.OpenApi",
+        "category": "mocking",
+        "version": "1.6.29",
+        "projects": [
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.openapi.readers",
+        "name": "Microsoft.OpenApi.Readers",
+        "category": "mocking",
+        "version": "1.6.29",
+        "projects": [
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.yaml",
+        "name": "YamlDotNet",
+        "category": "mocking",
+        "version": "16.3.0",
+        "projects": [
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.ml",
+        "name": "Microsoft.ML",
+        "category": "aiSelfHealing",
+        "version": "5.0.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.ml.ts",
+        "name": "Microsoft.ML.TimeSeries",
+        "category": "aiSelfHealing",
+        "version": "5.0.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.aws.core",
+        "name": "AWSSDK.Core",
+        "category": "cloud",
+        "version": "4.0.6.1",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.aws.devicefarm",
+        "name": "AWSSDK.DeviceFarm",
+        "category": "cloud",
+        "version": "4.0.4.23",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.aws.s3",
+        "name": "AWSSDK.S3",
+        "category": "cloud",
+        "version": "4.0.23",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.azure.identity",
+        "name": "Azure.Identity",
+        "category": "cloud",
+        "version": "1.21.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.azure.keyvault",
+        "name": "Azure.Security.KeyVault.Secrets",
+        "category": "security",
+        "version": "4.11.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.azure.blobs",
+        "name": "Azure.Storage.Blobs",
+        "category": "cloud",
+        "version": "12.27.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ],
+        "status": "partiallyImplemented",
+        "notes": "Package present; no Blob usage found."
+      },
+      {
+        "id": "dep.polly",
+        "name": "Polly",
+        "category": "resilience",
+        "version": "8.6.6",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.polly.http",
+        "name": "Polly.Extensions.Http",
+        "category": "resilience",
+        "version": "3.0.0",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.pdfpig",
+        "name": "PdfPig",
+        "category": "pdf",
+        "version": "0.1.14",
+        "projects": [
+          "QualiFrame.Pdf.Core.Engine"
+        ]
+      },
+      {
+        "id": "dep.pdfpig.skia",
+        "name": "PdfPig.Rendering.Skia",
+        "category": "pdf",
+        "version": "0.1.14.2",
+        "projects": [
+          "QualiFrame.Pdf.Core.Engine"
+        ]
+      },
+      {
+        "id": "dep.kafka",
+        "name": "Confluent.Kafka",
+        "category": "messaging",
+        "version": "2.14.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ],
+        "alternateVersion": "2.12.0",
+        "alternateProjects": [
+          "QualiFrame.Framework"
+        ],
+        "status": "partiallyImplemented"
+      },
+      {
+        "id": "dep.docker",
+        "name": "Docker.DotNet",
+        "category": "infrastructure",
+        "version": "3.125.15",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.me.config",
+        "name": "Microsoft.Extensions.Configuration",
+        "category": "configuration",
+        "version": "10.0.7",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking",
+          "QualiFrame.Runner.Core"
+        ]
+      },
+      {
+        "id": "dep.me.di",
+        "name": "Microsoft.Extensions.DependencyInjection",
+        "category": "di",
+        "version": "10.0.7",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.newtonsoft",
+        "name": "Newtonsoft.Json",
+        "category": "serialization",
+        "version": "13.0.4",
+        "projects": [
+          "QualiFrame.Framework",
+          "QualiFrame.Tests",
+          "QualiFrame.Mocking"
+        ]
+      },
+      {
+        "id": "dep.coverlet.collector",
+        "name": "coverlet.collector",
+        "category": "coverage",
+        "version": "10.0.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.coverlet.msbuild",
+        "name": "coverlet.msbuild",
+        "category": "coverage",
+        "version": "10.0.0",
+        "projects": [
+          "QualiFrame.Tests"
+        ]
+      },
+      {
+        "id": "dep.commandline",
+        "name": "CommandLineParser",
+        "category": "developmentTooling",
+        "version": "2.9.1",
+        "projects": [
+          "QualiFrame.Runner"
+        ]
+      },
+      {
+        "id": "dep.autofixture",
+        "name": "AutoFixture",
+        "category": "data",
+        "version": "4.18.1",
+        "projects": [
+          "QualiFrame.Tests"
+        ],
+        "status": "implemented",
+        "notes": "Used by SyntheticTestDataFactory in the test project."
+      },
+      {
+        "id": "dep.bogus",
+        "name": "Bogus",
+        "category": "data",
+        "version": "35.6.5",
+        "projects": [
+          "QualiFrame.Tests"
+        ],
+        "status": "implemented",
+        "notes": "Used by SyntheticTestDataFactory in the test project."
+      }
+    ]
+  },
+  "integrations": {
+    "items": [
+      {
+        "id": "integration.healenium",
+        "name": "Healenium",
+        "status": "implemented",
+        "confidence": "high",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs"
+        ],
+        "configurationReferences": [
+          "config.healenium.enabled"
+        ],
+        "documentationReferences": [
+          "DOC-HEAL-001",
+          "DOC-HEALINFRA-001"
+        ],
+        "scope": "Web FindElement healing from versioned local evidence plus Healenium:BackendUrl. Optional in-repo compose at healenium/."
+      },
+      {
+        "id": "integration.browserstack",
+        "name": "BrowserStack",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/BrowserStackPlatform.cs"
+        ],
+        "configurationReferences": [
+          "config.cloud.browserstack"
+        ]
+      },
+      {
+        "id": "integration.lambdatest",
+        "name": "LambdaTest",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/LambdaTestPlatform.cs"
+        ]
+      },
+      {
+        "id": "integration.saucelabs",
+        "name": "Sauce Labs",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/SauceLabsPlatform.cs"
+        ]
+      },
+      {
+        "id": "integration.perfecto",
+        "name": "Perfecto",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/PerfectoPlatform.cs"
+        ]
+      },
+      {
+        "id": "integration.experitest",
+        "name": "Experitest",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/ExperitestPlatform.cs"
+        ]
+      },
+      {
+        "id": "integration.aws.devicefarm",
+        "name": "AWS Device Farm",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/AwsDeviceFarmPlatform.cs"
+        ]
+      },
+      {
+        "id": "integration.azure.keyvault",
+        "name": "Azure Key Vault",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Security/SecretsManager.cs"
+        ],
+        "configurationReferences": [
+          "config.security.keyVault"
+        ]
+      },
+      {
+        "id": "integration.azure.blobs",
+        "name": "Azure Blob Storage",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Storage/ArtifactStorageClient.cs"
+        ],
+        "notes": "Opt-in artifact upload. Disabled unless Storage:AzureBlob:ConnectionString and Container are set."
+      },
+      {
+        "id": "integration.wiremock",
+        "name": "WireMock",
+        "status": "implemented",
+        "implementationReferences": [
+          "src/QualiFrame.Mocking/Server/WireMockServerManager.cs"
+        ]
+      },
+      {
+        "id": "integration.mcp.docs",
+        "name": "MCP/LLM documentation",
+        "status": "implemented",
+        "documentationReferences": [
+          "DOC-CTX-001"
+        ],
+        "notes": "docs/context and this manifest are the AI/MCP consumption surface; not a runtime MCP server product."
+      }
+    ]
+  },
+  "reporting": {
+    "summary": "Extent HTML plus Allure results, unified through UnifiedReportingService for BDD.",
+    "html": "ExtentReport at Results/Reports/ExtentReport.html",
+    "xml": "CI publishes TRX via dotnet test logger; Runner can request NUnit XML.",
+    "reporters": [
+      "component.reporting.unified",
+      "component.reporting.extent"
+    ],
+    "screenshots": "Enabled; failure screenshots in Hooks AfterScenario; stored under Results/Screenshots.",
+    "video": "Opt-in. VideoRecordingManager writes PNG frames to Results/Videos when TestConfiguration:VideoRecording is true.",
+    "traces": "No browser trace artifacts; Allure includes status details/stack traces.",
+    "artifactDirectories": [
+      "Results/AllureResults",
+      "Results/Reports",
+      "Results/Screenshots",
+      "Results/Logs",
+      "Results/Videos"
+    ],
+    "threadSafety": "AsyncLocal isolation in Extent/Allure/unified reporters.",
+    "preferredApi": "UnifiedReportingService for new BDD paths; ModularTestCase still uses ReportingService + AllureReporter.",
+    "notes": [
+      "Allure.NUnit does not fully drive Reqnroll tests; EnhancedAllureReporter writes result JSON."
+    ]
+  },
+  "observability": {
+    "summary": "Serilog is the implemented logging stack. OpenTelemetry packages are unused. Analytics/ML selection live under Analytics/.",
+    "logging": "QualiFrame.Framework.Utilities.Logging.Logger (Serilog file/console, enrichers, SensitiveDataMasker).",
+    "telemetry": "TelemetryBootstrap creates a console TracerProvider only when Observability:OpenTelemetry:Enabled is true.",
+    "dashboards": "notDetected",
+    "failureDiagnostics": "Screenshots, Serilog, Allure attachments, driver health checker. No automated RCA product.",
+    "analytics": "TestMetrics, TestAnalytics, SmartTestSelector, TestOrchestrator/TestDependencyGraph.",
+    "notes": [
+      "SmartTestSelection is disabled by default."
+    ]
+  },
+  "documentation": {
+    "summary": "Index of agent and human docs. Prefer references over copying content.",
+    "items": [
+      {
+        "id": "DOC-README-001",
+        "title": "Repository README",
+        "path": "README.md",
+        "topics": [
+          "overview",
+          "quickstart"
+        ],
+        "useWhen": [
+          "onboarding",
+          "first run"
+        ]
+      },
+      {
+        "id": "DOC-CHANGELOG-001",
+        "title": "Changelog",
+        "path": "CHANGELOG.md",
+        "topics": [
+          "version"
+        ],
+        "useWhen": [
+          "version history"
+        ]
+      },
+      {
+        "id": "DOC-LICENSE-001",
+        "title": "License notice",
+        "path": "LICENSE-NOTICE.md",
+        "topics": [
+          "license",
+          "dependencies"
+        ],
+        "useWhen": [
+          "dependency or commercial-use questions"
+        ]
+      },
+      {
+        "id": "DOC-MEM-001",
+        "title": "Memory map",
+        "path": "docs/MEMORY_MAP.yaml",
+        "topics": [
+          "capabilities",
+          "paths"
+        ],
+        "useWhen": [
+          "routing to implementation"
+        ]
+      },
+      {
+        "id": "DOC-CTX-001",
+        "title": "Context index",
+        "path": "docs/context/README.md",
+        "topics": [
+          "agents",
+          "mcp"
+        ],
+        "useWhen": [
+          "starting agent work"
+        ]
+      },
+      {
+        "id": "DOC-CORE-001",
+        "title": "Core context",
+        "path": "docs/context/core.md",
+        "topics": [
+          "identity",
+          "commands"
+        ],
+        "useWhen": [
+          "identifying the framework"
+        ]
+      },
+      {
+        "id": "DOC-ARCH-001",
+        "title": "Architecture",
+        "path": "docs/context/architecture.md",
+        "topics": [
+          "patterns",
+          "layers"
+        ],
+        "useWhen": [
+          "architecture or pattern questions"
+        ]
+      },
+      {
+        "id": "DOC-EXEC-001",
+        "title": "Execution",
+        "path": "docs/context/execution.md",
+        "topics": [
+          "dotnet test",
+          "runner",
+          "filters"
+        ],
+        "useWhen": [
+          "running tests"
+        ]
+      },
+      {
+        "id": "DOC-CFG-001",
+        "title": "Configuration",
+        "path": "docs/context/configuration.md",
+        "topics": [
+          "appsettings",
+          "secrets"
+        ],
+        "useWhen": [
+          "changing configuration"
+        ]
+      },
+      {
+        "id": "DOC-REPORT-001",
+        "title": "Reporting",
+        "path": "docs/context/reporting.md",
+        "topics": [
+          "extent",
+          "allure"
+        ],
+        "useWhen": [
+          "reporting changes"
+        ]
+      },
+      {
+        "id": "DOC-WEB-001",
+        "title": "WebDriver and healing",
+        "path": "docs/context/webdriver-and-healing.md",
+        "topics": [
+          "web",
+          "healenium",
+          "pool"
+        ],
+        "useWhen": [
+          "creating web tests or drivers"
+        ]
+      },
+      {
+        "id": "DOC-BDD-001",
+        "title": "BDD and modular tests",
+        "path": "docs/context/bdd-and-modular-tests.md",
+        "topics": [
+          "bdd",
+          "modular"
+        ],
+        "useWhen": [
+          "adding features or modular tests"
+        ]
+      },
+      {
+        "id": "DOC-API-001",
+        "title": "API, mocking, mobile, orchestration",
+        "path": "docs/context/api-mocking-mobile-orchestration.md",
+        "topics": [
+          "api",
+          "mocking",
+          "mobile"
+        ],
+        "useWhen": [
+          "API, mobile, or WireMock work"
+        ]
+      },
+      {
+        "id": "DOC-PDF-001",
+        "title": "PDF context",
+        "path": "docs/context/pdf.md",
+        "topics": [
+          "pdf"
+        ],
+        "useWhen": [
+          "PDF tests or validators"
+        ]
+      },
+      {
+        "id": "DOC-AGENT-001",
+        "title": "Agent instructions",
+        "path": "docs/context/agent-instructions.md",
+        "topics": [
+          "standards",
+          "reuse"
+        ],
+        "useWhen": [
+          "generating or editing automation"
+        ]
+      },
+      {
+        "id": "DOC-CI-001",
+        "title": "CI and licensing",
+        "path": "docs/context/ci-and-licensing.md",
+        "topics": [
+          "ci",
+          "license"
+        ],
+        "useWhen": [
+          "pipeline or license questions"
+        ]
+      },
+      {
+        "id": "DOC-GUIDE-001",
+        "title": "Guides index",
+        "path": "docs/guides/README.md",
+        "topics": [
+          "guides"
+        ],
+        "useWhen": [
+          "finding narrative guides"
+        ]
+      },
+      {
+        "id": "DOC-ALLURE-001",
+        "title": "Allure implementation",
+        "path": "docs/guides/ALLURE_IMPLEMENTATION_SUMMARY.md",
+        "topics": [
+          "allure"
+        ],
+        "useWhen": [
+          "Allure setup"
+        ]
+      },
+      {
+        "id": "DOC-MOBILE-001",
+        "title": "Appium setup",
+        "path": "docs/guides/APPIUM_SETUP_GUIDE.md",
+        "topics": [
+          "mobile"
+        ],
+        "useWhen": [
+          "Appium setup"
+        ]
+      },
+      {
+        "id": "DOC-MOBILE-002",
+        "title": "Mobile configuration",
+        "path": "docs/guides/MOBILE_CONFIGURATION_SUMMARY.md",
+        "topics": [
+          "mobile",
+          "config"
+        ],
+        "useWhen": [
+          "mobile configuration"
+        ]
+      },
+      {
+        "id": "DOC-DESKTOP-001",
+        "title": "Desktop automation",
+        "path": "docs/guides/DESKTOP_AUTOMATION.md",
+        "topics": [
+          "desktop"
+        ],
+        "useWhen": [
+          "FlaUI tests",
+          "desktop Calculator sample",
+          "desktop login template"
+        ]
+      },
+      {
+        "id": "DOC-HEAL-001",
+        "title": "Self-healing guide",
+        "path": "docs/guides/SELF_HEALING_AUTOMATION_GUIDE.md",
+        "topics": [
+          "healenium"
+        ],
+        "useWhen": [
+          "self-healing"
+        ]
+      },
+      {
+        "id": "DOC-HEALINFRA-001",
+        "title": "Healenium local Docker stack",
+        "path": "healenium/README.md",
+        "topics": [
+          "healenium",
+          "docker"
+        ],
+        "useWhen": [
+          "starting the optional local Healenium backend"
+        ]
+      },
+      {
+        "id": "DOC-RUN-001",
+        "title": "Run tests",
+        "path": "docs/guides/RUN_TESTS.md",
+        "topics": [
+          "execution"
+        ],
+        "useWhen": [
+          "local run instructions"
+        ]
+      },
+      {
+        "id": "DOC-HIGHLIGHTS-001",
+        "title": "Framework highlights",
+        "path": "docs/guides/FRAMEWORK_KEY_HIGHLIGHTS.md",
+        "topics": [
+          "overview"
+        ],
+        "useWhen": [
+          "feature overview"
+        ]
+      },
+      {
+        "id": "DOC-PDF-002",
+        "title": "PDF engine README",
+        "path": "src/QualiFrame.Pdf.Core.Engine/README.md",
+        "topics": [
+          "pdf",
+          "di"
+        ],
+        "useWhen": [
+          "extending PDF validators"
+        ]
+      },
+      {
+        "id": "DOC-MOCK-001",
+        "title": "Mocking README",
+        "path": "src/QualiFrame.Mocking/README.md",
+        "topics": [
+          "mocking"
+        ],
+        "useWhen": [
+          "WireMock/OpenAPI"
+        ]
+      },
+      {
+        "id": "DOC-POM-001",
+        "title": "Page objects README",
+        "path": "src/QualiFrame.Tests/PageObjects/README.md",
+        "topics": [
+          "pageObjects"
+        ],
+        "useWhen": [
+          "creating page objects"
+        ]
+      },
+      {
+        "id": "DOC-ARCHIVE-001",
+        "title": "Documentation archive",
+        "path": "docs/archive/README.md",
+        "topics": [
+          "history",
+          "migration"
+        ],
+        "useWhen": [
+          "historical merge or migration questions"
+        ]
+      },
+      {
+        "id": "DOC-SKILLS-001",
+        "title": "Skills inventory",
+        "path": "Skills.md",
+        "topics": [
+          "overview",
+          "technologies"
+        ],
+        "useWhen": [
+          "high-level technology inventory only; not authoritative for NuGet versions — use this manifest dependencies section and the .csproj files"
+        ]
+      },
+      {
+        "id": "DOC-MANIFEST-001",
+        "title": "Framework manifest guide",
+        "path": "docs/FRAMEWORK_MANIFEST_GUIDE.md",
+        "topics": [
+          "manifest",
+          "schema",
+          "ai"
+        ],
+        "useWhen": [
+          "updating the manifest or schema"
+        ]
+      }
+    ]
+  },
+  "traceability": {
+    "summary": "Major capabilities mapped to approaches, standards, modules, components, examples, and docs.",
+    "items": [
+      {
+        "capability": "capability.web",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.bdd",
+          "approach.modular",
+          "approach.hybrid"
+        ],
+        "standardReferences": [
+          "standard.web.pageObjects",
+          "standard.web.factory",
+          "standard.web.waits",
+          "standard.web.locators"
+        ],
+        "moduleReferences": [
+          "module.web.core",
+          "module.web.pages",
+          "module.tests"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/EnhancedWebDriverFactory.cs",
+          "src/QualiFrame.Framework/PageBases/BasePage.cs"
+        ],
+        "configurationReferences": [
+          "config.browser",
+          "config.headless"
+        ],
+        "reusableComponentReferences": [
+          "component.web.driverFactory",
+          "component.web.click",
+          "component.web.wait",
+          "component.web.windowFrame"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Web.feature",
+          "src/QualiFrame.Tests/PageObjects/WebPage.cs"
+        ],
+        "documentationReferences": [
+          "DOC-WEB-001",
+          "DOC-POM-001"
+        ]
+      },
+      {
+        "capability": "capability.web.selfHealing",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.bdd",
+          "approach.modular"
+        ],
+        "standardReferences": [
+          "standard.web.healing"
+        ],
+        "moduleReferences": [
+          "module.web.core",
+          "module.healenium"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/HealeniumDriverWrapper.cs"
+        ],
+        "configurationReferences": [
+          "config.healenium.enabled",
+          "config.healenium.backendUrl"
+        ],
+        "reusableComponentReferences": [
+          "component.web.selfHealing"
+        ],
+        "documentationReferences": [
+          "DOC-HEAL-001",
+          "DOC-HEALINFRA-001"
+        ]
+      },
+      {
+        "capability": "capability.api.rest",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.bdd"
+        ],
+        "moduleReferences": [
+          "module.api"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/EnhancedApiClient.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.api.restClient",
+          "component.api.retry"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/API.feature"
+        ],
+        "documentationReferences": [
+          "DOC-API-001"
+        ]
+      },
+      {
+        "capability": "capability.mobile",
+        "status": "partiallyImplemented",
+        "approachReferences": [
+          "approach.bdd"
+        ],
+        "standardReferences": [
+          "standard.mobile.reuse"
+        ],
+        "moduleReferences": [
+          "module.mobile"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/Mobile/AppiumDriverFactory.cs",
+          "src/QualiFrame.Framework/Mobile/Utilities/GestureActions.cs"
+        ],
+        "configurationReferences": [
+          "config.mobile.appium"
+        ],
+        "reusableComponentReferences": [
+          "component.mobile.driverFactory",
+          "component.mobile.gestures",
+          "component.mobile.context"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Mobile.feature"
+        ],
+        "documentationReferences": [
+          "DOC-MOBILE-001",
+          "DOC-MOBILE-002"
+        ]
+      },
+      {
+        "capability": "capability.desktop",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.bdd"
+        ],
+        "standardReferences": [
+          "standard.desktop.windows"
+        ],
+        "moduleReferences": [
+          "module.desktop"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Desktop/Drivers/DesktopSessionFactory.cs"
+        ],
+        "configurationReferences": [
+          "config.desktop.appId",
+          "config.desktop.automationType",
+          "config.desktop.launchMode"
+        ],
+        "reusableComponentReferences": [
+          "component.desktop.session",
+          "component.desktop.actions"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Features/Desktop.feature",
+          "src/QualiFrame.Tests/StepDefinitions/CalculatorSteps.cs"
+        ],
+        "documentationReferences": [
+          "DOC-DESKTOP-001"
+        ]
+      },
+      {
+        "capability": "capability.pdf",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.modular"
+        ],
+        "standardReferences": [
+          "standard.pdf.paths"
+        ],
+        "moduleReferences": [
+          "module.pdf"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Pdf.Core.Engine/Engine/PdfValidationEngine.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.pdf.engine"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/PDFTests/PdfValidationEngineTests.cs"
+        ],
+        "documentationReferences": [
+          "DOC-PDF-001",
+          "DOC-PDF-002"
+        ]
+      },
+      {
+        "capability": "capability.mocking",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.hybrid"
+        ],
+        "moduleReferences": [
+          "module.mocking"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Mocking/Server/WireMockServerManager.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.mocking.wiremock"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Integration/Mocking/SampleSwaggerDrivenMockTest.cs"
+        ],
+        "documentationReferences": [
+          "DOC-API-001",
+          "DOC-MOCK-001"
+        ]
+      },
+      {
+        "capability": "capability.reporting",
+        "status": "implemented",
+        "standardReferences": [
+          "standard.reporting.unified"
+        ],
+        "moduleReferences": [
+          "module.reporting"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Reporting/UnifiedReportingService.cs"
+        ],
+        "configurationReferences": [
+          "config.reporting.extent",
+          "config.reporting.allure"
+        ],
+        "reusableComponentReferences": [
+          "component.reporting.unified"
+        ],
+        "documentationReferences": [
+          "DOC-REPORT-001",
+          "DOC-ALLURE-001"
+        ]
+      },
+      {
+        "capability": "capability.database.sql",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.dataDriven"
+        ],
+        "standardReferences": [
+          "standard.data.sql",
+          "standard.data.factory"
+        ],
+        "moduleReferences": [
+          "module.data"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/SqlDataRepository.cs",
+          "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs"
+        ],
+        "configurationReferences": [
+          "config.database.connectionString",
+          "config.database.defaultTable",
+          "config.database.timeout"
+        ],
+        "reusableComponentReferences": [
+          "component.data.sqlRepository",
+          "component.data.repositoryFactory"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Unit/SqlDataRepositoryTests.cs"
+        ]
+      },
+      {
+        "capability": "capability.data.files",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.dataDriven"
+        ],
+        "standardReferences": [
+          "standard.data.factory"
+        ],
+        "moduleReferences": [
+          "module.data"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Data/Repositories/DataRepositoryFactory.cs"
+        ],
+        "reusableComponentReferences": [
+          "component.data.repositoryFactory"
+        ]
+      },
+      {
+        "capability": "capability.cloud",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.modular",
+          "approach.bdd"
+        ],
+        "moduleReferences": [
+          "module.cloud"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Cloud/CloudPlatformFactory.cs"
+        ],
+        "configurationReferences": [
+          "config.cloud.browserstack"
+        ],
+        "reusableComponentReferences": [
+          "component.cloud.platformFactory"
+        ]
+      },
+      {
+        "capability": "capability.video",
+        "status": "implemented",
+        "standardReferences": [
+          "standard.video"
+        ],
+        "moduleReferences": [
+          "module.web.core"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/Utilities/WebDriver/VideoRecordingManager.cs"
+        ],
+        "configurationReferences": [
+          "config.videoRecording"
+        ],
+        "reusableComponentReferences": [
+          "component.web.videoRecording"
+        ]
+      },
+      {
+        "capability": "capability.web.accessibility",
+        "status": "implemented",
+        "configurationReferences": [
+          "config.accessibility.enabled"
+        ],
+        "reusableComponentReferences": [
+          "component.web.accessibility"
+        ],
+        "exampleReferences": [
+          "src/QualiFrame.Tests/Tests/Examples/AccessibilityTest.cs"
+        ]
+      },
+      {
+        "capability": "capability.api.graphql",
+        "status": "implemented",
+        "approachReferences": [
+          "approach.modular"
+        ],
+        "standardReferences": [
+          "standard.api.client"
+        ],
+        "moduleReferences": [
+          "module.api"
+        ],
+        "implementationReferences": [
+          "src/QualiFrame.Framework/API/GraphQL/GraphQLClient.cs"
+        ],
+        "configurationReferences": [
+          "config.api.graphqlEndpoint"
+        ],
+        "reusableComponentReferences": [
+          "component.api.graphql"
+        ]
+      }
+    ]
+  },
+  "antiPatterns": {
+    "items": [
+      {
+        "id": "antiPattern.hardcodedSecrets",
+        "name": "Hard-coded credentials",
+        "status": "implemented",
+        "severity": "mandatory",
+        "rule": "Do not hard-code credentials or secret URLs in tests, steps, or features. Use configuration/SecretsManager.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ],
+        "notes": "Credentials belong in configuration or environment variables. Do not put them in feature files or this manifest."
+      },
+      {
+        "id": "antiPattern.arbitrarySleep",
+        "name": "Arbitrary sleeps",
+        "status": "implemented",
+        "severity": "mandatory",
+        "rule": "Do not use Thread.Sleep for UI sync; use framework waits.",
+        "sourceReferences": [
+          "docs/guides/SELF_HEALING_AUTOMATION_GUIDE.md"
+        ]
+      },
+      {
+        "id": "antiPattern.directDriver",
+        "name": "Bypassing the driver factory",
+        "status": "implemented",
+        "severity": "mandatory",
+        "rule": "Do not construct ChromeDriver/FirefoxDriver directly when EnhancedWebDriverFactory exists.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "antiPattern.appPagesInFramework",
+        "name": "Application pages in Framework",
+        "status": "implemented",
+        "severity": "mandatory",
+        "rule": "Do not add application page objects under Framework/PageBases.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "antiPattern.selectorsInTests",
+        "name": "Selectors in test logic",
+        "status": "implemented",
+        "severity": "recommended",
+        "rule": "Keep locators in page/component objects, not step definitions or ModularTestCase bodies.",
+        "sourceReferences": [
+          "src/QualiFrame.Tests/PageObjects/README.md"
+        ]
+      },
+      {
+        "id": "antiPattern.bypassHooks",
+        "name": "Bypassing hooks",
+        "status": "implemented",
+        "severity": "recommended",
+        "rule": "Do not start/stop drivers or reporters outside Hooks/ModularTestCase lifecycle unless extending those extension points.",
+        "sourceReferences": [
+          "docs/context/bdd-and-modular-tests.md"
+        ]
+      },
+      {
+        "id": "antiPattern.duplicateSteps",
+        "name": "Duplicate BDD steps",
+        "status": "implemented",
+        "severity": "recommended",
+        "rule": "Search StepDefinitions before adding a new Given/When/Then.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "antiPattern.runnerTestReference",
+        "name": "Runner referencing Tests",
+        "status": "implemented",
+        "severity": "mandatory",
+        "rule": "Do not add a compile-time project reference from Runner to QualiFrame.Tests.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "antiPattern.duplicateUtilities",
+        "name": "Duplicate utilities",
+        "status": "implemented",
+        "severity": "recommended",
+        "rule": "Search reusableComponents in this manifest before creating new click/wait/API/report helpers.",
+        "sourceReferences": [
+          "docs/context/agent-instructions.md"
+        ]
+      },
+      {
+        "id": "antiPattern.bypassReporting",
+        "name": "Bypassing reporting",
+        "status": "implemented",
+        "severity": "recommended",
+        "rule": "Do not write parallel reporting pipelines; use UnifiedReportingService or the existing Extent/Allure managers.",
+        "sourceReferences": [
+          "docs/context/reporting.md"
+        ]
+      }
+    ]
+  },
+  "aiGuidance": {
+    "summary": "How an LLM or MCP agent should consume this repository.",
+    "coreBehavior": "Understand -> Validate -> Locate -> Reuse -> Extend -> Verify -> Document",
+    "steps": [
+      "Read FRAMEWORK_MANIFEST.json.",
+      "Validate it against FRAMEWORK_MANIFEST.schema.json using python3 scripts/validate-framework-manifest.py.",
+      "Identify the requested capability by stable ID.",
+      "Identify the automation approach (BDD, modular, keyword, screenplay, hybrid).",
+      "Resolve applicable standards and anti-patterns.",
+      "Identify the correct module and layer boundary.",
+      "Search reusableComponents before creating new helpers.",
+      "Check lifecycle and configuration requirements, including secret references.",
+      "Follow implementationReferences rather than copying large source into prompts.",
+      "Consult documentation IDs listed for the capability.",
+      "Inspect representative examples.",
+      "Generate or modify code in the correct project.",
+      "Validate against framework standards.",
+      "Update this manifest only if framework knowledge changed; do not change the schema unless the knowledge model cannot represent the concept."
+    ],
+    "reuseBeforeCreate": "Always reuse EnhancedWebDriverFactory, AppiumDriverFactory, BasePage/ComponentPage, DataRepositoryFactory, UnifiedReportingService, ExtentReportManager, EnhancedApiClient, GraphQLClient, GrpcChannelFactory, WebSocketTestClient, KafkaMessageClient, KeywordRegistry, GestureActions, DesktopActions, PdfValidationEngine, VideoRecordingManager, ArtifactStorageClient, and WireMockServerManager when they already cover the need.",
+    "doNotAssume": [
+      "SOAP client support",
+      "RabbitMQ",
+      "Pact contract testing",
+      "Default-on Kafka/gRPC/WebSocket usage (wrappers are opt-in and need addresses/brokers)",
+      "OpenTelemetry runtime pipeline unless Observability:OpenTelemetry:Enabled is true",
+      "ALM connectors (qTest/Jira/TestRail) beyond Allure link templates",
+      "Hybrid mobile WEBVIEW as a first-class API"
+    ],
+    "whenToUpdateManifest": "Update FRAMEWORK_MANIFEST.json when adding/removing a verified capability, module, reusable component, integration, execution command, or documentation path. Preserve stable IDs; mark removed items deprecated.",
+    "schemaGovernance": "Do not modify FRAMEWORK_MANIFEST.schema.json for routine framework knowledge changes. Schema changes require an identified limitation, classification, schemaVersion bump, manifest update, validation, and a note in docs/FRAMEWORK_MANIFEST_GUIDE.md."
+  }
+}

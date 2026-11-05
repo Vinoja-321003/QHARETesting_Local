@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Product Defects",
+        "matchedStatuses": [
+            "failed"
+        ]
+    },
+    {
+        "name": "Test Defects",
+        "matchedStatuses": [
+            "broken"
+        ]
+    },
+    {
+        "name": "Ignored Tests",
+        "matchedStatuses": [
+            "skipped"
+        ]
+    },
+    {
+        "name": "Infrastructure Problems",
+        "matchedStatuses": [
+            "broken"
+        ],
+        "messageRegex": ".*(served|connect|time|out).*"
+    },
+    {
+        "name": "Outdated Tests",
+        "matchedStatuses": [
+            "broken"
+        ],
+        "messageRegex": ".*(element|locate|selector).*"
+    }
+]

@@ -1,0 +1,9 @@
+{
+  "id": 0,
+  "petId": ${PetId},
+  "quantity": ${Quantity},
+  "shipDate": "${ShipDate}",
+  "status": "${Status}",
+  "complete": ${Complete}
+}
+

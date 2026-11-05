@@ -1,0 +1,226 @@
+# =============================================================================
+# QualiFrame — .gitignore (GitHub, GitLab, Azure DevOps)
+# Keeps repos lean: no build output, test artifacts, IDE noise, or secrets.
+# Local cleanup: bash scripts/clean.sh
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# .NET build outputs
+# -----------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]uild/
+bld/
+artifacts/
+out/
+publish/
+
+# -----------------------------------------------------------------------------
+# NuGet
+# -----------------------------------------------------------------------------
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+
+# -----------------------------------------------------------------------------
+# Test, coverage & report outputs (QualiFrame)
+# -----------------------------------------------------------------------------
+[Tt]est[Rr]esult*/
+[Tt]est[Rr]esults/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage*.json
+coverage*.xml
+*.opencover.xml
+*.cobertura.xml
+.coverage
+.coverage.*
+htmlcov/
+[Bb]enchmark[Dd]ot[Nn]et.Artifacts/
+.msCoverage*
+CoverletSourceRootsMapping_*
+Results/
+allure-results/
+allure-report/
+AllureResults/
+AllureReport/
+ExtentReports/
+Screenshots/
+test-output/
+SparkReport/
+**/PdfMasterValidation/
+**/PdfCompare/
+**/PdfValidationEngine/
+**/DiffReports/
+qualiframe-*.log
+qualiframe-*.json
+
+# Accidental nested test output (wrong working directory during runs)
+src/QualiFrame.Tests/src/
+
+# -----------------------------------------------------------------------------
+# Selenium / browser drivers (if extracted outside bin/)
+# -----------------------------------------------------------------------------
+chromedriver*
+geckodriver*
+msedgedriver*
+selenium-manager
+IEDriverServer*
+
+# -----------------------------------------------------------------------------
+# Reqnroll generated artifacts under obj/ (obj/ already ignored; explicit for safety)
+# -----------------------------------------------------------------------------
+*.feature.ndjson
+
+# -----------------------------------------------------------------------------
+# IDE — Visual Studio
+# -----------------------------------------------------------------------------
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+*.rsuser
+*.VC.db
+*.VC.VC.opendb
+
+# -----------------------------------------------------------------------------
+# IDE — Visual Studio Code
+# -----------------------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+*.code-workspace
+
+# -----------------------------------------------------------------------------
+# IDE — JetBrains Rider / IntelliJ
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# -----------------------------------------------------------------------------
+# IDE — ReSharper / NCrunch / dotCover
+# -----------------------------------------------------------------------------
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+_TeamCity*
+*.dotCover
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# -----------------------------------------------------------------------------
+# .NET tooling & local SDK
+# -----------------------------------------------------------------------------
+.dotnet/
+.tools/
+*.dotnetUserLevelCache
+
+# -----------------------------------------------------------------------------
+# Azure DevOps / GitHub / GitLab local overrides
+# -----------------------------------------------------------------------------
+.azure/
+.github/workflows/*.local.yml
+.gitlab-ci.local.yml
+
+# -----------------------------------------------------------------------------
+# Python (tools/nuget_upgrade_scan.py)
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+tools/output/
+
+# -----------------------------------------------------------------------------
+# Docker / WireMock local state
+# -----------------------------------------------------------------------------
+docker-compose.override.yml
+docker-compose.*.local.yml
+.wiremock/
+
+# -----------------------------------------------------------------------------
+# Playwright / browser automation caches
+# -----------------------------------------------------------------------------
+.playwright/
+ms-playwright/
+playwright-report/
+playwright/.cache/
+
+# -----------------------------------------------------------------------------
+# Mobile (Appium)
+# -----------------------------------------------------------------------------
+appium.log
+*.appium.log
+
+# -----------------------------------------------------------------------------
+# Secrets & local configuration (never commit)
+# -----------------------------------------------------------------------------
+*.env
+*.env.*
+!*.env.example
+secrets.json
+credentials.json
+appsettings.*.local.json
+appsettings.Local.json
+*.pfx
+*.p12
+*.pem
+*.key
+local.settings.json
+
+# -----------------------------------------------------------------------------
+# OS-generated files
+# -----------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+
+# -----------------------------------------------------------------------------
+# Archives & temporary files
+# -----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+*.orig
+*.rej

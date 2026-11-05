@@ -1,0 +1,48 @@
+# Aligns with GitHub Actions and Azure DevOps via scripts/ci-build-test.sh.
+# Targets QualiFrame.Tests only (avoids QualiFrame.Runner / MTP conflicts).
+
+stages:
+  - validate
+  - build-and-test
+  - report
+
+variables:
+  BUILD_CONFIGURATION: "Release"
+  TEST_PROJECT: "src/QualiFrame.Tests/QualiFrame.Tests.csproj"
+  TEST_RESULTS_TRX: "test-results.trx"
+
+default:
+  image: mcr.microsoft.com/dotnet/sdk:10.0
+
+validate-manifest:
+  stage: validate
+  image: python:3.12-slim
+  script:
+    - pip install --quiet jsonschema
+    - python scripts/validate-framework-manifest.py
+
+build-and-test:
+  stage: build-and-test
+  script:
+    - bash scripts/ci-build-test.sh
+  artifacts:
+    when: always
+    paths:
+      - test-results.trx
+      - "**/TestResults/**"
+      - Results/**
+    expire_in: 30 days
+
+report:
+  stage: report
+  script:
+    - mkdir -p Results
+    - ls -la Results/ || true
+  artifacts:
+    when: always
+    paths:
+      - Results/**
+    expire_in: 30 days
+  only:
+    - main
+    - develop

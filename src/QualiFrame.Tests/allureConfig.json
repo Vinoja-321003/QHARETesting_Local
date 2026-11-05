@@ -1,0 +1,10 @@
+{
+  "allure": {
+    "directory": "Results/AllureResults",
+    "links": [
+      "https://github.com/allure-framework/allure2/issues/{issue}",
+      "https://example.com/tms/{tms}"
+    ]
+  }
+}
+

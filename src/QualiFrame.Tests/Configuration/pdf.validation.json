@@ -1,0 +1,52 @@
+{
+  "profileName": "full",
+  "description": "Sample profile enabling all validators with realistic settings for Base vs Compare PDF validation.",
+  "validators": {
+    "comparison": true,
+    "structure": true,
+    "font": true,
+    "signature": false
+  },
+  "comparison": {
+    "textTolerance": 0,
+    "visualSimilarityThreshold": 0.99,
+    "layoutTolerancePoints": 2.0,
+    "compareText": true,
+    "compareLayout": true,
+    "compareVisual": false,
+    "dynamicFieldMasks": []
+  },
+  "parsing": {
+    "includeStructure": true,
+    "includeTables": true,
+    "includeImages": true,
+    "includeFontInfo": true,
+    "maxPages": null
+  },
+  "font": {
+    "allowedFontFamilies": null,
+    "disallowSubsetFonts": false,
+    "requireEmbeddedFonts": true,
+    "minFontSize": null,
+    "maxFontSize": null,
+    "failOnMissingFonts": false
+  },
+  "signature": {
+    "requireSignature": false,
+    "validateCertificateChain": true,
+    "validateTimestamp": false,
+    "allowedSigners": null
+  },
+  "structure": {
+    "requirePageOrder": true,
+    "minBlocksPerPage": null,
+    "validateTableStructure": true
+  },
+  "ignoreRegions": [],
+  "artifacts": {
+    "emitReportJson": true,
+    "emitParsedModelJson": false,
+    "emitDiffPdf": false,
+    "emitDiffImages": true
+  }
+}

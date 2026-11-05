@@ -1,0 +1,799 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "FRAMEWORK_MANIFEST.schema.json",
+  "title": "Framework Manifest",
+  "description": "Language- and tool-agnostic contract for an AI-readable automation framework Single Source of Truth. Instance files describe one repository; this schema does not assume a language, runner, or capability.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "manifest",
+    "framework",
+    "architecture",
+    "automationApproaches",
+    "capabilities",
+    "designPatterns",
+    "standards",
+    "modules",
+    "reusableComponents",
+    "dataManagement",
+    "configuration",
+    "execution",
+    "lifecycle",
+    "dependencies",
+    "integrations",
+    "reporting",
+    "observability",
+    "documentation",
+    "traceability",
+    "antiPatterns",
+    "aiGuidance"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Repository-relative or URI reference to this schema."
+    },
+    "manifest": { "$ref": "#/$defs/manifestMetadata" },
+    "framework": { "$ref": "#/$defs/frameworkIdentity" },
+    "architecture": { "$ref": "#/$defs/architecture" },
+    "automationApproaches": { "$ref": "#/$defs/catalog", "description": "Verified automation approaches (modular, BDD, data-driven, keyword-driven, hybrid, and others only when evidenced)." },
+    "capabilities": { "$ref": "#/$defs/catalog" },
+    "designPatterns": { "$ref": "#/$defs/catalog" },
+    "standards": { "$ref": "#/$defs/catalog" },
+    "modules": { "$ref": "#/$defs/catalog" },
+    "reusableComponents": { "$ref": "#/$defs/catalog" },
+    "dataManagement": { "$ref": "#/$defs/dataManagement" },
+    "configuration": { "$ref": "#/$defs/configuration" },
+    "execution": { "$ref": "#/$defs/execution" },
+    "lifecycle": { "$ref": "#/$defs/lifecycle" },
+    "dependencies": { "$ref": "#/$defs/dependencies" },
+    "integrations": { "$ref": "#/$defs/catalog" },
+    "reporting": { "$ref": "#/$defs/reporting" },
+    "observability": { "$ref": "#/$defs/observability" },
+    "documentation": { "$ref": "#/$defs/documentationRegistry" },
+    "traceability": { "$ref": "#/$defs/traceability" },
+    "antiPatterns": { "$ref": "#/$defs/catalog" },
+    "aiGuidance": { "$ref": "#/$defs/aiGuidance" }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/).+",
+      "description": "Repository-relative path. No leading slash and no machine-specific absolute paths."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "implemented",
+        "partiallyImplemented",
+        "planned",
+        "deprecated",
+        "notSupported",
+        "notDetected",
+        "unknown"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["mandatory", "recommended", "optional", "deprecated"]
+    },
+    "generationMode": {
+      "type": "string",
+      "enum": ["repository-analysis", "incremental-update", "manual"]
+    },
+    "validationStatus": {
+      "type": "string",
+      "enum": ["valid", "invalid", "pending", "unknown"]
+    },
+    "sensitivity": {
+      "type": "string",
+      "enum": ["none", "secretReference", "forbidden"]
+    },
+    "stableId": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[A-Za-z][A-Za-z0-9]*([._-][A-Za-z0-9]+)+$"
+    },
+    "capabilityId": {
+      "type": "string",
+      "pattern": "^capability\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "approachId": {
+      "type": "string",
+      "pattern": "^approach\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "standardId": {
+      "type": "string",
+      "pattern": "^standard\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "moduleId": {
+      "type": "string",
+      "pattern": "^module\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "componentId": {
+      "type": "string",
+      "pattern": "^component\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "patternId": {
+      "type": "string",
+      "pattern": "^pattern\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "integrationId": {
+      "type": "string",
+      "pattern": "^integration\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "documentationId": {
+      "type": "string",
+      "pattern": "^DOC-[A-Z0-9]+-[0-9]{3,}$"
+    },
+    "antiPatternId": {
+      "type": "string",
+      "pattern": "^antiPattern\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "configId": {
+      "type": "string",
+      "pattern": "^config\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "lifecycleStageId": {
+      "type": "string",
+      "pattern": "^lifecycle\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)*$"
+    },
+    "stringList": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "pathList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/repoPath" }
+    },
+    "idList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stableId" }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary"],
+      "properties": {
+        "summary": { "$ref": "#/$defs/nonEmptyString" },
+        "path": { "$ref": "#/$defs/repoPath" },
+        "symbol": { "type": "string" }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "type": { "type": "string" },
+        "required": { "type": "boolean" },
+        "default": { "type": ["string", "number", "boolean", "null"] },
+        "description": { "type": "string" }
+      }
+    },
+    "namedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "name": { "type": "string" },
+        "path": { "$ref": "#/$defs/repoPath" },
+        "role": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "catalogItemBase": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "type": "string" },
+        "status": { "$ref": "#/$defs/status" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "supported": { "type": "boolean" },
+        "notes": { "type": "string" },
+        "limitations": { "$ref": "#/$defs/stringList" },
+        "technologies": { "$ref": "#/$defs/stringList" },
+        "moduleReferences": { "$ref": "#/$defs/idList" },
+        "implementationReferences": { "$ref": "#/$defs/pathList" },
+        "configurationReferences": { "$ref": "#/$defs/idList" },
+        "reusableComponentReferences": { "$ref": "#/$defs/idList" },
+        "exampleReferences": { "$ref": "#/$defs/pathList" },
+        "documentationReferences": { "$ref": "#/$defs/idList" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceItem" }
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "summary": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/catalogItem" }
+        }
+      }
+    },
+    "catalogItem": {
+      "allOf": [
+        { "$ref": "#/$defs/catalogItemBase" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": true,
+            "name": true,
+            "purpose": true,
+            "status": true,
+            "confidence": true,
+            "supported": true,
+            "notes": true,
+            "limitations": true,
+            "technologies": true,
+            "moduleReferences": true,
+            "implementationReferences": true,
+            "configurationReferences": true,
+            "reusableComponentReferences": true,
+            "exampleReferences": true,
+            "documentationReferences": true,
+            "evidence": true,
+            "rule": { "type": "string" },
+            "severity": { "$ref": "#/$defs/severity" },
+            "sourceReferences": { "$ref": "#/$defs/pathList" },
+            "examples": { "$ref": "#/$defs/pathList" },
+            "path": { "$ref": "#/$defs/repoPath" },
+            "type": { "type": "string" },
+            "responsibilities": { "$ref": "#/$defs/stringList" },
+            "publicInterfaces": { "$ref": "#/$defs/stringList" },
+            "dependencies": { "$ref": "#/$defs/stringList" },
+            "capabilities": { "$ref": "#/$defs/idList" },
+            "moduleReference": { "$ref": "#/$defs/moduleId" },
+            "signature": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/parameter" }
+            },
+            "returns": { "type": "string" },
+            "supportedApproaches": { "$ref": "#/$defs/idList" },
+            "usageGuidance": { "type": "string" },
+            "scope": { "type": "string" },
+            "featureFiles": { "$ref": "#/$defs/pathList" },
+            "stepDefinitions": { "$ref": "#/$defs/pathList" },
+            "hooks": { "$ref": "#/$defs/pathList" },
+            "runners": { "$ref": "#/$defs/pathList" },
+            "tags": { "$ref": "#/$defs/stringList" },
+            "dataSources": { "$ref": "#/$defs/stringList" },
+            "keywordDefinitions": { "$ref": "#/$defs/pathList" },
+            "extensionModel": { "type": "string" },
+            "usage": { "type": "string" },
+            "whenToUse": { "$ref": "#/$defs/stringList" },
+            "whenNotToUse": { "$ref": "#/$defs/stringList" },
+            "category": { "type": "string" },
+            "version": { "type": "string" },
+            "projects": { "$ref": "#/$defs/stringList" },
+            "alternateVersion": { "type": "string" },
+            "alternateProjects": { "$ref": "#/$defs/stringList" },
+            "replacement": { "type": "string" },
+            "reason": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "manifestMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "manifestVersion",
+        "frameworkVersion",
+        "generatedAt",
+        "generationMode",
+        "repositoryCommit",
+        "validationStatus"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "manifestVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "frameworkVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "generationMode": { "$ref": "#/$defs/generationMode" },
+        "repositoryCommit": { "type": "string" },
+        "validationStatus": { "$ref": "#/$defs/validationStatus" },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "frameworkIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "displayName": { "type": "string" },
+        "version": { "type": "string" },
+        "purpose": { "type": "string" },
+        "license": { "type": "string" },
+        "licenseReferences": { "$ref": "#/$defs/pathList" },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": { "$ref": "#/$defs/nonEmptyString" },
+              "version": { "type": "string" },
+              "target": { "type": "string" },
+              "sdkPin": { "type": "string" },
+              "sdkPinFile": { "$ref": "#/$defs/repoPath" }
+            }
+          }
+        },
+        "automationTechnologies": { "$ref": "#/$defs/stringList" },
+        "testRunners": { "$ref": "#/$defs/stringList" },
+        "assertionLibraries": { "$ref": "#/$defs/stringList" },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "packageManagers": { "$ref": "#/$defs/stringList" },
+            "solution": { "$ref": "#/$defs/repoPath" },
+            "solutionFilters": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/$defs/repoPath" }
+            },
+            "sdkPin": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "file": { "$ref": "#/$defs/repoPath" },
+                "version": { "type": "string" },
+                "rollForward": { "type": "string" }
+              }
+            }
+          }
+        },
+        "supportedPlatforms": { "$ref": "#/$defs/stringList" },
+        "executionEnvironments": { "$ref": "#/$defs/stringList" },
+        "repository": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "solution": { "$ref": "#/$defs/repoPath" },
+            "layout": { "type": "string" }
+          }
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "path", "role"],
+            "properties": {
+              "name": { "$ref": "#/$defs/nonEmptyString" },
+              "path": { "$ref": "#/$defs/repoPath" },
+              "role": { "$ref": "#/$defs/nonEmptyString" },
+              "packable": { "type": "boolean" },
+              "isTestProject": { "type": "boolean" },
+              "notes": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style", "layers"],
+      "properties": {
+        "style": { "type": "string" },
+        "summary": { "type": "string" },
+        "executionFlow": { "type": "string" },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name", "path"],
+            "properties": {
+              "id": { "$ref": "#/$defs/stableId" },
+              "name": { "$ref": "#/$defs/nonEmptyString" },
+              "path": { "$ref": "#/$defs/repoPath" },
+              "rule": { "type": "string" },
+              "responsibilities": { "$ref": "#/$defs/stringList" }
+            }
+          }
+        },
+        "abstractions": { "$ref": "#/$defs/stringList" },
+        "extensionPoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+              "name": { "$ref": "#/$defs/nonEmptyString" },
+              "path": { "$ref": "#/$defs/repoPath" },
+              "guidance": { "type": "string" }
+            }
+          }
+        },
+        "boundaries": { "$ref": "#/$defs/stringList" },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "dataManagement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "formats": { "$ref": "#/$defs/stringList" },
+        "locations": { "$ref": "#/$defs/pathList" },
+        "readers": { "$ref": "#/$defs/idList" },
+        "factories": { "$ref": "#/$defs/pathList" },
+        "generators": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "$ref": "#/$defs/status" },
+            "packages": { "$ref": "#/$defs/stringList" },
+            "notes": { "type": "string" }
+          }
+        },
+        "parameterization": { "type": "string" },
+        "masking": { "type": "string" },
+        "cleanup": { "type": "string" },
+        "precedence": { "type": "string" },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "configurationSetting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "purpose"],
+      "properties": {
+        "id": { "$ref": "#/$defs/configId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "type": "string" },
+        "source": { "$ref": "#/$defs/repoPath" },
+        "key": { "type": "string" },
+        "default": { "type": ["string", "number", "boolean", "null"] },
+        "overrideMechanism": { "type": "string" },
+        "sensitivity": { "$ref": "#/$defs/sensitivity" },
+        "consumers": { "$ref": "#/$defs/stringList" },
+        "notes": { "type": "string" }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "sources": { "$ref": "#/$defs/pathList" },
+        "precedence": { "$ref": "#/$defs/stringList" },
+        "secretHandling": { "type": "string" },
+        "settings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/configurationSetting" }
+        },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "executionCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "command"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "command": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "type": "string" },
+        "when": { "type": "string" }
+      }
+    },
+    "cicdPipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "platform": { "type": "string" },
+        "status": { "$ref": "#/$defs/status" },
+        "pipelineFile": { "$ref": "#/$defs/repoPath" },
+        "stages": { "$ref": "#/$defs/stringList" },
+        "commands": { "$ref": "#/$defs/stringList" },
+        "environmentHandling": { "type": "string" },
+        "artifacts": { "$ref": "#/$defs/stringList" },
+        "reports": { "$ref": "#/$defs/stringList" },
+        "qualityGates": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "local": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cli": { "$ref": "#/$defs/stringList" },
+            "ide": { "type": "string" },
+            "caveats": { "$ref": "#/$defs/stringList" }
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/executionCommand" }
+        },
+        "filtering": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tags": { "type": "string" },
+            "categories": { "$ref": "#/$defs/stringList" },
+            "examples": { "$ref": "#/$defs/stringList" }
+          }
+        },
+        "headedHeadless": { "type": "string" },
+        "retries": { "type": "string" },
+        "parallelization": { "type": "string" },
+        "containers": { "type": "string" },
+        "remoteCloud": { "type": "string" },
+        "cicd": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "summary": { "type": "string" },
+            "pipelines": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/cicdPipeline" }
+            }
+          }
+        },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "lifecycleHook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "path": { "$ref": "#/$defs/repoPath" },
+        "scope": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "lifecycleStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "order"],
+      "properties": {
+        "id": { "$ref": "#/$defs/lifecycleStageId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "order": { "type": "integer", "minimum": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "description": { "type": "string" },
+        "implementationReferences": { "$ref": "#/$defs/pathList" },
+        "hooks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/lifecycleHook" }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stages"],
+      "properties": {
+        "summary": { "type": "string" },
+        "flow": { "type": "string" },
+        "stages": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/lifecycleStage" }
+        }
+      }
+    },
+    "dependencyItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "category"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "category": {
+          "type": "string",
+          "enum": [
+            "coreAutomation",
+            "testRunner",
+            "assertions",
+            "bdd",
+            "api",
+            "mobile",
+            "desktop",
+            "database",
+            "reporting",
+            "logging",
+            "cloud",
+            "visual",
+            "accessibility",
+            "mocking",
+            "observability",
+            "aiSelfHealing",
+            "developmentTooling",
+            "data",
+            "security",
+            "pdf",
+            "messaging",
+            "resilience",
+            "di",
+            "configuration",
+            "serialization",
+            "infrastructure",
+            "runtime",
+            "coverage",
+            "other"
+          ]
+        },
+        "version": { "type": "string" },
+        "projects": { "$ref": "#/$defs/stringList" },
+        "alternateVersion": { "type": "string" },
+        "alternateProjects": { "$ref": "#/$defs/stringList" },
+        "status": { "$ref": "#/$defs/status" },
+        "notes": { "type": "string" }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "summary": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/dependencyItem" }
+        },
+        "removedOrReplaced": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "reason"],
+            "properties": {
+              "name": { "$ref": "#/$defs/nonEmptyString" },
+              "reason": { "$ref": "#/$defs/nonEmptyString" },
+              "replacement": { "type": "string" }
+            }
+          }
+        },
+        "versionNotes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "html": { "type": "string" },
+        "xml": { "type": "string" },
+        "reporters": { "$ref": "#/$defs/idList" },
+        "screenshots": { "type": "string" },
+        "video": { "type": "string" },
+        "traces": { "type": "string" },
+        "artifactDirectories": { "$ref": "#/$defs/pathList" },
+        "threadSafety": { "type": "string" },
+        "preferredApi": { "type": "string" },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "logging": { "type": "string" },
+        "telemetry": { "type": "string" },
+        "dashboards": { "type": "string" },
+        "failureDiagnostics": { "type": "string" },
+        "analytics": { "type": "string" },
+        "notes": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "documentationEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "path"],
+      "properties": {
+        "id": { "$ref": "#/$defs/documentationId" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "path": { "$ref": "#/$defs/repoPath" },
+        "topics": { "$ref": "#/$defs/stringList" },
+        "useWhen": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "documentationRegistry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "summary": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/documentationEntry" }
+        }
+      }
+    },
+    "traceabilityLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability", "status"],
+      "properties": {
+        "capability": { "$ref": "#/$defs/capabilityId" },
+        "status": { "$ref": "#/$defs/status" },
+        "approachReferences": { "$ref": "#/$defs/idList" },
+        "standardReferences": { "$ref": "#/$defs/idList" },
+        "moduleReferences": { "$ref": "#/$defs/idList" },
+        "implementationReferences": { "$ref": "#/$defs/pathList" },
+        "configurationReferences": { "$ref": "#/$defs/idList" },
+        "reusableComponentReferences": { "$ref": "#/$defs/idList" },
+        "exampleReferences": { "$ref": "#/$defs/pathList" },
+        "documentationReferences": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "summary": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/traceabilityLink" }
+        }
+      }
+    },
+    "aiGuidance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coreBehavior", "steps"],
+      "properties": {
+        "summary": { "type": "string" },
+        "coreBehavior": { "$ref": "#/$defs/nonEmptyString" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "reuseBeforeCreate": { "type": "string" },
+        "doNotAssume": { "$ref": "#/$defs/stringList" },
+        "whenToUpdateManifest": { "type": "string" },
+        "schemaGovernance": { "type": "string" }
+      }
+    }
+  }
+}

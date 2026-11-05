@@ -1,0 +1,39 @@
+<Project>
+  <PropertyGroup>
+    <!-- Single configuration for CI/test builds (override: -c Debug). Runner projects are Debug-only. -->
+    <QualiFrameBuildConfiguration Condition="'$(QualiFrameBuildConfiguration)' == ''">Release</QualiFrameBuildConfiguration>
+
+    <!-- Multi-target TFMs. Override for faster local builds, e.g. -p:QualiFrameTfms=net9.0 -->
+    <QualiFrameTfms Condition="'$(QualiFrameTfms)' == ''">net8.0;net9.0;net10.0</QualiFrameTfms>
+
+    <!-- Configuration.* package line (stable majors; patch availability differs from DI packages) -->
+    <QualiFrameMsExtConfigVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.0</QualiFrameMsExtConfigVersion>
+    <QualiFrameMsExtConfigVersion Condition="'$(TargetFramework)' == 'net9.0'">9.0.0</QualiFrameMsExtConfigVersion>
+    <QualiFrameMsExtConfigVersion Condition="'$(TargetFramework)' == 'net10.0'">10.0.7</QualiFrameMsExtConfigVersion>
+    <QualiFrameMsExtConfigVersion Condition="'$(QualiFrameMsExtConfigVersion)' == ''">10.0.7</QualiFrameMsExtConfigVersion>
+
+    <!-- DI package line (Abstractions floats to satisfy Grpc/SqlClient transitive floors) -->
+    <QualiFrameMsExtDiVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.1</QualiFrameMsExtDiVersion>
+    <QualiFrameMsExtDiVersion Condition="'$(TargetFramework)' == 'net9.0'">9.0.4</QualiFrameMsExtDiVersion>
+    <QualiFrameMsExtDiVersion Condition="'$(TargetFramework)' == 'net10.0'">10.0.7</QualiFrameMsExtDiVersion>
+    <QualiFrameMsExtDiVersion Condition="'$(QualiFrameMsExtDiVersion)' == ''">10.0.7</QualiFrameMsExtDiVersion>
+
+    <QualiFrameBclPackageVersion Condition="'$(TargetFramework)' == 'net8.0'">8.0.0</QualiFrameBclPackageVersion>
+    <QualiFrameBclPackageVersion Condition="'$(TargetFramework)' == 'net9.0'">9.0.0</QualiFrameBclPackageVersion>
+    <QualiFrameBclPackageVersion Condition="'$(TargetFramework)' == 'net10.0'">10.0.7</QualiFrameBclPackageVersion>
+    <QualiFrameBclPackageVersion Condition="'$(QualiFrameBclPackageVersion)' == ''">10.0.7</QualiFrameBclPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Code Coverage Settings -->
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>opencover,cobertura,json</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildProjectDirectory)/TestResults/coverage</CoverletOutput>
+    <CoverletOutputDirectory>$(MSBuildProjectDirectory)/TestResults</CoverletOutputDirectory>
+    <!-- Coverage threshold disabled - re-enable when coverage improves -->
+    <!-- <Threshold>50</Threshold> -->
+    <!-- <ThresholdType>line,branch,method</ThresholdType> -->
+    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+    <Exclude>[*.Tests]*,[*.Test]*</Exclude>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "Qualiframe-CSharp-NUnit_v3.0.sln",
+    "projects": [
+      "src\\QualiFrame.Framework\\QualiFrame.Framework.csproj",
+      "src\\QualiFrame.Pdf.Core.Engine\\QualiFrame.Pdf.Core.Engine.csproj",
+      "src\\QualiFrame.Mocking\\QualiFrame.Mocking.csproj",
+      "src\\QualiFrame.Tests\\QualiFrame.Tests.csproj"
+    ]
+  }
+}

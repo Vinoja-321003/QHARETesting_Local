@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>$(QualiFrameTfms)</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <Version>3.1.1</Version>
+    <Authors>QualiFrame Team</Authors>
+    <Description>QualiFrame PDF Automation - Unified core engine, configuration, integration, validation, and reporting.</Description>
+    <RootNamespace>QualiFrame.Pdf.Core.Engine</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.14" />
+    <PackageReference Include="PdfPig.Rendering.Skia" Version="0.1.14.2" />
+    <PackageReference Include="SkiaSharp" Version="3.119.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QualiFrame.Framework\QualiFrame.Framework.csproj" />
+  </ItemGroup>
+</Project>
+

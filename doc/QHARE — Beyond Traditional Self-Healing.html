@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QHARE — Beyond Traditional Self-Healing</title>
+<meta name="description" content="Qualiframe Adaptive Healing & Reliability Engine. From locator repair to adaptive test resilience.">
+<style>
+  :root {
+    --bg: #efe8dc;
+    --paper: #fbf7f0;
+    --ink: #17202b;
+    --muted: #5d6b78;
+    --line: #ddd4c6;
+    --navy: #122033;
+    --navy-2: #1c3148;
+    --blue: #1d4f8f;
+    --blue-soft: #e6f0fb;
+    --teal: #0e6b66;
+    --teal-soft: #e4f4f2;
+    --red: #8d2e2e;
+    --red-soft: #fbeeee;
+    --gold: #8a5a14;
+    --gold-soft: #f8f0df;
+    --green: #1c6b43;
+    --green-soft: #e6f5ec;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --nav: 272px;
+    --shadow: 0 18px 50px rgba(23, 32, 43, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+  img, svg { max-width: 100%; }
+  a { color: var(--blue); }
+  button, input { font: inherit; }
+  :focus-visible { outline: 3px solid #e0a23a; outline-offset: 2px; }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0; height: 3px;
+    width: 0;
+    background: #e0a23a;
+    z-index: 20;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: var(--nav) minmax(0, 1fr);
+    min-height: 100vh;
+  }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: auto;
+    background: var(--navy);
+    color: #d5deea;
+    padding: 1.4rem 1.1rem 2rem;
+  }
+  .nav .brand {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-family: var(--serif);
+    font-size: 1.55rem;
+    letter-spacing: 0.04em;
+  }
+  .nav .brand small {
+    display: block;
+    margin-top: 0.2rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8fb4e8;
+    font-weight: 600;
+  }
+  .nav h2 {
+    margin: 1.4rem 0 0.35rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8ea0b5;
+    font-weight: 700;
+  }
+  .nav a.item {
+    display: block;
+    color: #d5deea;
+    text-decoration: none;
+    font-size: 0.92rem;
+    padding: 0.28rem 0.55rem;
+    border-left: 2px solid transparent;
+    border-radius: 0 4px 4px 0;
+  }
+  .nav a.item:hover { color: white; }
+  .nav a.item.active {
+    color: white;
+    border-left-color: #e0a23a;
+    background: rgba(255,255,255,0.06);
+  }
+
+  main { min-width: 0; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 2.2rem 4rem; }
+
+  .hero {
+    background:
+      radial-gradient(900px 420px at 90% -10%, rgba(224,162,58,0.22), transparent 55%),
+      linear-gradient(165deg, #0e1a2b 0%, #173155 58%, #0e1a2b 100%);
+    color: #f4f7fb;
+    padding: 4.2rem 0 3.4rem;
+  }
+  .hero .wrap { padding-bottom: 0; }
+  .kicker {
+    margin: 0 0 0.7rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #e0a23a;
+  }
+  .hero h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(3.2rem, 6vw, 5.4rem);
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+  }
+  .hero .sub {
+    margin: 0.85rem 0 0;
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    font-weight: 500;
+    color: #d7e4f5;
+  }
+  .hero .engine {
+    margin: 1rem 0 0;
+    color: #9eb6d4;
+    max-width: 38rem;
+  }
+
+  .quotes {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+  .quote {
+    padding: 1.2rem 1.25rem 1.3rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+  }
+  .quote p { margin: 0.4rem 0 0; font-family: var(--serif); font-size: 1.35rem; line-height: 1.35; }
+  .quote.qhare { background: rgba(224,162,58,0.12); border-color: rgba(224,162,58,0.4); }
+  .quote.qhare p { font-size: 1.2rem; }
+  .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .quote .label { color: #9eb6d4; }
+  .quote.qhare .label { color: #e0a23a; }
+
+  section { padding: 3.4rem 0 0.4rem; scroll-margin-top: 1.2rem; }
+  section h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0.2rem 0 0.8rem;
+  }
+  .lede { font-size: 1.12rem; max-width: 44rem; color: #314152; margin-top: 0; }
+  .pull {
+    margin: 1.4rem 0 0;
+    padding-left: 1rem;
+    border-left: 3px solid var(--gold);
+    font-family: var(--serif);
+    font-size: 1.28rem;
+    line-height: 1.35;
+  }
+
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 1.15rem 1.2rem 1.25rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem; }
+
+  pre, code { font-family: var(--mono); }
+  pre {
+    margin: 0;
+    background: var(--navy);
+    color: #e7eef8;
+    padding: 1rem 1.1rem;
+    overflow: auto;
+    max-width: 100%;
+    white-space: pre-wrap;
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+  .muted { color: var(--muted); }
+  h3 { margin: 0 0 0.45rem; font-size: 1.02rem; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* diagrams */
+  .flow {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+  .step {
+    background: var(--navy);
+    color: white;
+    padding: 0.65rem 0.45rem;
+    min-width: 0;
+    flex: 1 1 0;
+    text-align: center;
+    font-weight: 650;
+    font-size: 0.86rem;
+    line-height: 1.25;
+  }
+  .step small { display: block; font-weight: 500; color: #b7c6d8; font-size: 0.75rem; margin-top: 0.15rem; }
+  .step.blue { background: var(--blue); }
+  .step.teal { background: var(--teal); }
+  .step.red { background: var(--red); }
+  .step.green { background: var(--green); }
+  .step.gold { background: var(--gold); }
+  .step.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .join {
+    align-self: center;
+    color: var(--blue);
+    font-weight: 700;
+  }
+  .vcol { display: flex; flex-direction: column; gap: 0.35rem; align-items: center; }
+  .down { color: var(--blue); font-size: 0.85rem; line-height: 1; }
+
+  .fork {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.9rem;
+  }
+  .lane { padding: 0.9rem 1rem; border-top: 4px solid var(--green); background: var(--green-soft); }
+  .lane.bad { border-top-color: var(--red); background: var(--red-soft); }
+  .lane strong { display: block; letter-spacing: 0.08em; font-size: 0.75rem; margin-bottom: 0.25rem; }
+  .eq {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    margin-top: 0.9rem;
+    background: var(--navy);
+    color: white;
+  }
+  .eq div { padding: 0.9rem 1rem; }
+  .eq .who { color: #e0a23a; font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 700; }
+  .eq p { margin: 0.15rem 0 0; font-family: var(--serif); font-size: 1.25rem; }
+
+  .spoke-head {
+    text-align: center;
+    background: var(--navy);
+    color: white;
+    padding: 0.85rem 1rem;
+    font-weight: 700;
+  }
+  .spoke-head span { color: #e0a23a; font-weight: 600; }
+  .adapter {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 0.85rem 0.7rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+  .adapter::before {
+    content: "";
+    position: absolute;
+    top: -0.55rem; left: 50%;
+    width: 1px; height: 0.55rem;
+    background: var(--blue);
+  }
+  .adapter b { display: block; margin-bottom: 0.2rem; }
+  .adapter em { display: block; font-style: normal; color: var(--blue); font-size: 0.75rem; letter-spacing: 0.12em; font-weight: 700; }
+  .adapter span { color: var(--muted); font-size: 0.92rem; }
+
+  .stack { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1rem; align-items: start; }
+  .pipe { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .pipe .step { flex: none; width: 100%; }
+  .pipe .down { text-align: center; padding: 0.15rem 0; }
+
+  .causes { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.3rem 0 1rem; }
+  .cause {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 0.35rem 0.6rem;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  .cause[aria-pressed="true"] { color: white; border-color: transparent; }
+  .cause.heal[aria-pressed="true"] { background: var(--blue); }
+  .cause.recover[aria-pressed="true"] { background: var(--teal); }
+  .cause.protect[aria-pressed="true"] { background: var(--red); }
+  .filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.7rem; }
+  .filters button, .seg button, .levels button, .cand button {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+  }
+  .filters button[aria-pressed="true"],
+  .seg button[aria-pressed="true"],
+  .levels button[aria-current="true"],
+  .cand button[aria-pressed="true"] { color: white; border-color: transparent; }
+  .filters button[data-filter="all"][aria-pressed="true"] { background: var(--navy); }
+  .filters button[data-filter="heal"][aria-pressed="true"] { background: var(--blue); }
+  .filters button[data-filter="recover"][aria-pressed="true"] { background: var(--teal); }
+  .filters button[data-filter="protect"][aria-pressed="true"] { background: var(--red); }
+
+  .bucket { padding: 0.9rem 1rem 1rem; min-height: 100%; }
+  .bucket.heal { background: var(--blue-soft); }
+  .bucket.recover { background: var(--teal-soft); }
+  .bucket.protect { background: var(--red-soft); }
+  .bucket h3 { font-size: 0.78rem; }
+  .bucket ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+  .bucket li.dim { opacity: 0.28; }
+
+  .tree-top { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; margin-bottom: 0.8rem; }
+  .node {
+    background: var(--navy);
+    color: white;
+    padding: 0.55rem 1rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .branch {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--blue);
+    padding: 0.8rem 0.9rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+  }
+  .branch.recover { border-top-color: var(--teal); }
+  .branch.protect { border-top-color: var(--red); }
+  .branch[aria-pressed="true"] { box-shadow: var(--shadow); }
+  .branch.heal[aria-pressed="true"] { background: var(--blue-soft); }
+  .branch.recover[aria-pressed="true"] { background: var(--teal-soft); }
+  .branch.protect[aria-pressed="true"] { background: var(--red-soft); }
+  .branch ol { margin: 0.4rem 0 0; padding-left: 1.15rem; font-size: 0.95rem; }
+  .example {
+    margin-top: 0.8rem;
+    padding: 0.9rem 1rem;
+    background: var(--navy);
+    color: white;
+    font-family: var(--serif);
+    font-size: 1.2rem;
+  }
+
+  .tokens { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tok {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 0.28rem 0.5rem;
+    font-size: 0.88rem;
+  }
+  .group-h { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; margin: 0 0 0.45rem; }
+  .group-h.blue { color: var(--blue); }
+  .group-h.teal { color: var(--teal); }
+  .group-h.gold { color: var(--gold); }
+
+  .screens { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .browser {
+    background: white;
+    border: 1px solid #cfc6b8;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .chrome {
+    background: #ece7df;
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding: 0.4rem 0.7rem;
+    font-family: var(--mono);
+  }
+  .screen { padding: 1.1rem 1.15rem 1.2rem; }
+  .field-label { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.25rem; }
+  .field {
+    height: 2rem;
+    border: 1px solid #c9c1b4;
+    background: #fafafa;
+    margin-bottom: 0.75rem;
+  }
+  .btn-old, .btn-new, .ghost-btn {
+    border: 0;
+    cursor: default;
+    font-weight: 700;
+    padding: 0.55rem 1rem;
+  }
+  .btn-old { background: #1d4f8f; color: white; border-radius: 2px; }
+  .btn-new {
+    background: #111;
+    color: white;
+    border-radius: 999px;
+    padding: 0.6rem 1.2rem;
+  }
+  .rel {
+    margin-top: 0.55rem;
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .meta-line { margin-top: 0.7rem; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th, td { text-align: left; padding: 0.48rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--navy); color: white; font-weight: 650; font-size: 0.82rem; letter-spacing: 0.04em; }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,0.45); }
+  td.match { color: var(--green); font-weight: 700; }
+  td.shift { color: var(--gold); font-weight: 700; }
+  td.qh { color: var(--blue); font-weight: 700; }
+
+  .signal-map {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.7rem;
+  }
+  .sig {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 0.85rem 0.9rem;
+    min-height: 7.2rem;
+  }
+  .sig b { display: block; margin-bottom: 0.25rem; }
+  .sig.score { background: var(--navy); color: white; border-color: var(--navy); }
+  .sig.score b { color: #e0a23a; }
+
+  .cand { display: grid; gap: 0.45rem; }
+  .cand button { text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; align-items: center; }
+  .cand button[aria-pressed="true"] { background: var(--navy); }
+  .meter { height: 8px; background: #e4ddd2; margin-top: 0.35rem; grid-column: 1 / -1; }
+  .meter span {
+    display: block; height: 100%; width: 0; background: var(--blue);
+    transition: width 0.7s ease;
+  }
+  .meter.go span { width: var(--w); }
+  .comp { display: grid; grid-template-columns: 11rem 1fr 2.5rem; gap: 0.45rem; align-items: center; margin: 0.35rem 0; font-size: 0.92rem; }
+  .policy { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.45rem; margin-top: 0.8rem; }
+  .policy div { color: white; text-align: center; padding: 0.75rem 0.4rem; font-weight: 750; font-size: 0.82rem; letter-spacing: 0.03em; }
+
+  .scene { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; }
+  .app {
+    background: #f7f5f1;
+    border: 1px solid #d9d1c5;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+  .app header.appbar {
+    background: white;
+    border-bottom: 1px solid var(--line);
+    padding: 0.55rem 0.8rem;
+    font-weight: 750;
+  }
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding: 0.8rem; }
+  .tile { background: white; border: 1px solid var(--line); padding: 0.8rem; min-height: 92px; }
+  .tile b { display: block; }
+  .modal {
+    position: absolute;
+    inset: 52px 18px 18px;
+    background: white;
+    border: 1px solid #111;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    padding: 1rem;
+    display: none;
+  }
+  .app.actual .modal { display: block; }
+  .app.actual .tile.orders { filter: grayscale(0.4); opacity: 0.45; }
+  .app.recovered .tile.orders { outline: 2px solid var(--green); }
+  .seg { display: flex; flex-direction: column; gap: 0.4rem; }
+  .seg button { text-align: left; }
+  .seg button[aria-pressed="true"] { background: var(--teal); }
+
+  .timeline { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 16px 3.2rem 1fr;
+    gap: 0.6rem;
+    align-items: start;
+  }
+  .dotcol { display: flex; flex-direction: column; align-items: center; }
+  .dot { width: 12px; height: 12px; background: var(--blue); border-radius: 50%; margin-top: 0.3rem; }
+  .dot.now { background: var(--green); }
+  .stem { width: 2px; flex: 1; min-height: 1.6rem; background: var(--line); }
+  .levels { display: grid; gap: 0.35rem; }
+  .levels button {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr auto;
+    gap: 0.6rem;
+    text-align: left;
+    align-items: center;
+    background: linear-gradient(90deg, var(--tint, #e7eef6) var(--grow), transparent var(--grow));
+  }
+  .levels button[aria-current="true"] { outline: 2px solid var(--navy); }
+  .detail { min-height: 8rem; }
+
+  .search {
+    width: 100%;
+    margin: 0 0 0.7rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--line);
+    background: white;
+  }
+  tr.hidden { display: none; }
+  .note {
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-top: 0.7rem;
+  }
+
+  .pillars { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0.7rem; }
+  .pillar {
+    border: 0;
+    text-align: left;
+    padding: 1rem;
+    cursor: pointer;
+    color: white;
+    min-height: 220px;
+  }
+  .pillar.heal { background: var(--blue); grid-row: span 1; }
+  .pillar.recover { background: var(--teal); }
+  .pillar.protect { background: var(--red); }
+  .pillar.learn { background: var(--gold); }
+  .pillar[aria-pressed="true"] { outline: 3px solid var(--navy); outline-offset: 2px; }
+  .pillar span { display: block; font-family: var(--serif); font-size: 1.6rem; margin-bottom: 0.35rem; }
+  .pillar ul { margin: 0.4rem 0 0; padding-left: 1rem; font-size: 0.9rem; }
+  .converge {
+    margin-top: 0.7rem;
+    background: var(--navy);
+    color: white;
+    padding: 1rem 1.1rem;
+  }
+  .converge b { color: #e0a23a; letter-spacing: 0.12em; font-size: 0.75rem; }
+
+  .close {
+    margin-top: 3rem;
+    background: var(--navy);
+    color: white;
+    padding: 3rem 0 3.2rem;
+  }
+  .close h2 { color: white; }
+  .caps { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 1.5rem; }
+  .caps div { padding: 0.55rem 0; border-top: 1px solid rgba(255,255,255,0.12); }
+  .caps b { display: block; }
+  .bigq { font-family: var(--serif); font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.3; margin: 0.4rem 0 0; }
+  .trad { color: #b7c4d6; }
+  footer.site {
+    padding: 1rem 0 1.4rem;
+    color: #8ea0b5;
+    font-size: 0.85rem;
+  }
+
+  details { margin-top: 0.8rem; }
+  summary { cursor: pointer; font-weight: 700; color: var(--blue); }
+
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: minmax(0, 1fr); }
+    .nav {
+      position: sticky;
+      top: 0;
+      height: auto;
+      z-index: 5;
+      display: flex;
+      gap: 0.8rem;
+      overflow: auto;
+      min-width: 0;
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      align-items: center;
+    }
+    .nav .brand small, .nav h2 { display: none; }
+    .nav a.item { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; border-radius: 0; }
+    .nav a.item.active { border-bottom-color: #e0a23a; background: transparent; }
+    .quotes, .grid-2, .grid-3, .grid-5, .stack, .fork, .screens, .branches,
+    .signal-map, .policy, .scene, .pillars, .caps, .eq { grid-template-columns: 1fr; }
+    .flow { flex-wrap: wrap; }
+    .step { flex: 1 1 8.5rem; }
+    .pillar.heal { grid-row: auto; }
+    .wrap { padding: 0 1rem 3rem; }
+    .comp { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .meter span { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="shell">
+  <nav class="nav" aria-label="Sections">
+    <a class="brand" href="#top">QHARE<small>Qualiframe</small></a>
+    <h2>Question</h2>
+    <a class="item" href="#opening">The shift</a>
+    <a class="item" href="#taxonomy">Not every failure</a>
+    <h2>Stack</h2>
+    <a class="item" href="#pluggable">Pluggable</a>
+    <a class="item" href="#around">Around the framework</a>
+    <a class="item" href="#adapters">One core</a>
+    <a class="item" href="#selenium">Selenium path</a>
+    <a class="item" href="#trigger">When it starts</a>
+    <h2>Decision</h2>
+    <a class="item" href="#decision">Classifier</a>
+    <a class="item" href="#pillars">Four pillars</a>
+    <h2>Heal</h2>
+    <a class="item" href="#heal">True healing</a>
+    <a class="item" href="#identity">Logical identity</a>
+    <a class="item" href="#signals">Many signals</a>
+    <a class="item" href="#confidence">Confidence</a>
+    <a class="item" href="#native">Native locators</a>
+    <h2>Recover</h2>
+    <a class="item" href="#sync">Synchronization</a>
+    <a class="item" href="#runtime">Runtime state</a>
+    <a class="item" href="#recover">Two endpoints</a>
+    <h2>Protect</h2>
+    <a class="item" href="#donot">Do not heal</a>
+    <a class="item" href="#guard">Guardrails</a>
+    <a class="item" href="#validate">Validate the outcome</a>
+    <a class="item" href="#telemetry">Telemetry</a>
+    <a class="item" href="#failsafe">Fail closed</a>
+    <h2>Learn</h2>
+    <a class="item" href="#history">Element history</a>
+    <a class="item" href="#maturity">Maturity</a>
+    <h2>Position</h2>
+    <a class="item" href="#models">Two models</a>
+    <a class="item" href="#compare">Comparison frame</a>
+    <a class="item" href="#close">Close</a>
+  </nav>
+
+  <main id="top">
+    <header class="hero">
+      <div class="wrap">
+        <p class="kicker">Qualiframe Adaptive Healing &amp; Reliability Engine</p>
+        <h1>QHARE</h1>
+        <p class="sub">Beyond traditional self-healing</p>
+        <p class="engine">From locator repair to adaptive test resilience. The framework keeps executing the test. QHARE decides why it failed, whether to intervene, and whether the outcome can be trusted.</p>
+        <div class="quotes">
+          <blockquote class="quote">
+            <div class="label">Traditional self-healing</div>
+            <p>“The locator failed — can I find a similar element?”</p>
+          </blockquote>
+          <blockquote class="quote qhare">
+            <div class="label">QHARE</div>
+            <p>Why did the operation fail? Should it be healed? Which recovery is appropriate? Is this the same business intent? Did the application behave correctly afterward?</p>
+          </blockquote>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <section id="opening">
+        <p class="kicker">The argument</p>
+        <h2>Self-healing stops being locator repair.</h2>
+        <p class="lede">A conventional tool treats a failed lookup as a broken locator, finds something similar, and continues. QHARE treats the failed operation as a problem to classify. Healing is one response. It is not the default.</p>
+        <div class="grid-2" style="margin-top:1rem">
+          <div class="panel">
+            <h3>Conventional pattern</h3>
+            <div class="pipe" aria-label="Conventional self-healing flow">
+              <div class="step ghost">Locator fails</div>
+              <div class="down" aria-hidden="true">▼</div>
+              <div class="step ghost">Find a similar element</div>
+              <div class="down" aria-hidden="true">▼</div>
+              <div class="step ghost">Select a locator</div>
+              <div class="down" aria-hidden="true">▼</div>
+              <div class="step ghost">Retry</div>
+              <div class="down" aria-hidden="true">▼</div>
+              <div class="step ghost">Continue</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Where that breaks</h3>
+            <ul>
+              <li>Every failure is made to look like a locator.</li>
+              <li>Similarity stands in for business intent.</li>
+              <li>The business outcome is not required to prove the heal.</li>
+              <li>A real defect can become a passing step.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="pull">The stronger position is not a better locator algorithm. It is failure-aware automation resilience.</p>
+      </section>
+
+      <section id="taxonomy">
+        <p class="kicker">Failure is not locator failure</p>
+        <h2>Thirteen causes. Three responses.</h2>
+        <p class="lede">A failed UI action can be a changed control, a page that is not ready, or a genuine product, data, or infrastructure fault. QHARE classifies the cause before it chooses a recovery.</p>
+        <div class="filters" role="group" aria-label="Show failure class">
+          <button type="button" data-filter="all" aria-pressed="true">All causes</button>
+          <button type="button" data-filter="heal" aria-pressed="false">Heal</button>
+          <button type="button" data-filter="recover" aria-pressed="false">Recover</button>
+          <button type="button" data-filter="protect" aria-pressed="false">Do not heal</button>
+        </div>
+        <div class="grid-3">
+          <div class="bucket heal">
+            <h3 style="color:var(--blue)">Heal · same element, new form</h3>
+            <ul>
+              <li data-class="heal">Locator changed</li>
+              <li data-class="heal">DOM changed</li>
+              <li data-class="heal">Text changed</li>
+              <li data-class="heal">Element moved</li>
+            </ul>
+          </div>
+          <div class="bucket recover">
+            <h3 style="color:var(--teal)">Recover · right element, wrong moment</h3>
+            <ul>
+              <li data-class="recover">Element still loading</li>
+              <li data-class="recover">Element disabled</li>
+              <li data-class="recover">Popup blocking the element</li>
+            </ul>
+          </div>
+          <div class="bucket protect">
+            <h3 style="color:var(--red)">Do not heal · not a locator problem</h3>
+            <ul>
+              <li data-class="protect">Wrong page or navigation</li>
+              <li data-class="protect">Authentication expired</li>
+              <li data-class="protect">Test data incorrect</li>
+              <li data-class="protect">Backend failed</li>
+              <li data-class="protect">Product defect</li>
+              <li data-class="protect">Infrastructure failed</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">A recoverable navigation deviation can later be a runtime recovery. A genuinely wrong page is not. Authentication expiry is an access failure, not a locator to rewrite.</p>
+      </section>
+
+      <section id="pluggable">
+        <p class="kicker">01 · Pluggable, not intrusive</p>
+        <h2>Page Objects stay as they are.</h2>
+        <p class="lede">QHARE is a configurable self-healing provider inside Qualiframe. Selenium Page Objects keep using ordinary <code>By</code> locators. Only one provider wraps the driver at a time.</p>
+        <div class="grid-2">
+          <pre aria-label="Qualiframe self-healing configuration">{
+  "SelfHealing": { "Provider": "Qhare" },
+  "Qhare": {
+    "Enabled": true,
+    "BaseUrl": "&lt;QHARE_CORE_URL&gt;",
+    "ProjectId": "&lt;PROJECT_ID&gt;",
+    "Mode": "AUTO_HEAL",
+    "FailClosed": true
+  }
+}</pre>
+          <div class="panel">
+            <h3>One wrapper</h3>
+            <div class="vcol">
+              <div class="node">Self-healing provider</div>
+              <div class="down" aria-hidden="true">▼</div>
+              <div class="flow" style="width:100%">
+                <div class="step ghost">Healenium</div>
+                <div class="step blue">QHARE</div>
+                <div class="step ghost">Off</div>
+              </div>
+            </div>
+            <p class="note">Healenium, QHARE, or Off. Teams can introduce QHARE without redesigning the automation architecture.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="around">
+        <p class="kicker">02 · Around the existing framework</p>
+        <h2>The framework executes. QHARE makes that execution resilient.</h2>
+        <p class="lede">QHARE does not replace Selenium, Playwright, Cypress, WebdriverIO, or Robot Framework. It supplies the intelligence and resilience layer around execution.</p>
+        <div class="panel">
+          <div class="flow" aria-label="Execution path into native lookup">
+            <div class="step">Test automation</div>
+            <span class="join" aria-hidden="true">→</span>
+            <div class="step">Existing page object</div>
+            <span class="join" aria-hidden="true">→</span>
+            <div class="step">Native locator</div>
+            <span class="join" aria-hidden="true">→</span>
+            <div class="step">Native lookup</div>
+          </div>
+          <div class="fork">
+            <div class="lane">
+              <strong>SUCCESS</strong>
+              QHARE does nothing. The test continues on the native result.
+            </div>
+            <div class="lane bad">
+              <strong>FAILURE</strong>
+              The QHARE adapter calls the core. The native failure is the only trigger.
+              <div class="flow" style="margin-top:0.7rem">
+                <div class="step blue">Heal</div>
+                <div class="step teal">Recover</div>
+                <div class="step red">Fail</div>
+              </div>
+            </div>
+          </div>
+          <div class="eq">
+            <div>
+              <div class="who">FRAMEWORK</div>
+              <p>Execution</p>
+            </div>
+            <div>
+              <div class="who">QHARE</div>
+              <p>Resilience · Intelligence · Governance · Observability</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="adapters">
+        <p class="kicker">03 · Common intelligence</p>
+        <h2>Adapters stay native. Healing stays in one core.</h2>
+        <p class="lede">Framework-specific execution logic remains in the adapters. Healing intelligence stays centralized, so there is not a separate healing algorithm for every automation technology.</p>
+        <div class="spoke-head">QHARE CORE <span>· policy, matching, history, governance</span></div>
+        <div class="grid-5" style="margin-top:0.7rem">
+          <div class="adapter"><b>Selenium</b><em>ADAPTER</em><span>IWebDriver</span></div>
+          <div class="adapter"><b>Playwright</b><em>ADAPTER</em><span>Locator API</span></div>
+          <div class="adapter"><b>Cypress</b><em>ADAPTER</em><span>cy.* APIs</span></div>
+          <div class="adapter"><b>WebdriverIO</b><em>ADAPTER</em><span>Adapter</span></div>
+          <div class="adapter"><b>Robot Framework</b><em>ADAPTER</em><span>Adapter</span></div>
+        </div>
+      </section>
+
+      <section id="selenium">
+        <p class="kicker">04 · Selenium integration</p>
+        <h2>On a successful lookup, QHARE does nothing.</h2>
+        <p class="lede">The Selenium adapter is an <code>IWebDriver</code> wrapper. BasePage, explicit waits, Page Objects, <code>By</code> locators, Reqnroll steps, and existing utilities keep running.</p>
+        <div class="stack">
+          <div class="panel pipe" aria-label="Selenium call path">
+            <div class="step ghost">Existing test</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step ghost">Page object</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step ghost">By locator</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step blue">QhareDriverWrapper</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step">Native Selenium lookup</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step green">Success → QHARE stays silent → test continues</div>
+          </div>
+          <div class="panel">
+            <h3>Unchanged</h3>
+            <ul>
+              <li><b>BasePage</b> — page foundations stay in place</li>
+              <li><b>Explicit waits</b> — framework timing stays in place</li>
+              <li><b>Page Objects</b> — no redesign to enable QHARE</li>
+              <li><b>By locators</b> — ordinary Selenium locators</li>
+              <li><b>Reqnroll steps</b> — step definitions stay as written</li>
+              <li><b>Framework utilities</b> — existing helpers keep running</li>
+            </ul>
+          </div>
+        </div>
+        <p class="pull">QHARE does not interfere with successful native framework behavior.</p>
+      </section>
+
+      <section id="trigger">
+        <p class="kicker">05 · Native failure is the trigger</p>
+        <h2>QHARE starts only after the framework lookup fails.</h2>
+        <div class="grid-2">
+          <div class="panel pipe">
+            <div class="step" style="font-family:var(--mono);font-size:0.82rem">FindElement(By.Id("loginButton"))</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step ghost">Native lookup</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step red">NoSuchElement</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step blue">QHARE adapter</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step" style="font-family:var(--mono);font-size:0.86rem">POST /api/v1/heal</div>
+            <p class="note">The core receives enough context to judge what happened and whether recovery is appropriate.</p>
+          </div>
+          <div class="panel pipe" id="failsafe">
+            <h3 style="align-self:flex-start">Fail closed</h3>
+            <div class="step ghost">Native locator failure</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step blue">QHARE requested</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step red">QHARE Core unavailable</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step">Original NoSuchElementException</div>
+            <div class="down" aria-hidden="true">▼</div>
+            <div class="step red">The test fails normally</div>
+            <p class="note"><code>FailClosed: true</code>. A QHARE outage must never become a false pass.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="decision">
+        <p class="kicker">07 · Failure-aware decision model</p>
+        <h2>Classify first. Then heal, recover, or refuse.</h2>
+        <p class="lede">Select a branch. The example underneath is the kind of failure that belongs on that path. The architecture is there to stop QHARE healing every automation failure.</p>
+        <div class="tree-top" aria-hidden="true">
+          <div class="node">UI automation failure</div>
+          <div class="down">▼</div>
+          <div class="node">Failure classifier</div>
+        </div>
+        <div class="branches" role="group" aria-label="Failure classes">
+          <button class="branch heal" type="button" aria-pressed="true" data-branch="heal">
+            <h3 style="color:var(--blue)">Element / locator change</h3>
+            <ol>
+              <li>Element healing</li>
+              <li>Candidate, semantic, structural, accessibility, and historical matching</li>
+              <li>Confidence scoring — high: attempt; low: reject or suggest</li>
+              <li>Post-action validation — pass: accept; fail: reject</li>
+            </ol>
+          </button>
+          <button class="branch recover" type="button" aria-pressed="false" data-branch="recover">
+            <h3 style="color:var(--teal)">Runtime / state issue</h3>
+            <ol>
+              <li>Runtime recovery, not a new locator</li>
+              <li>Wait and retry</li>
+              <li>Popup, context, and state recovery</li>
+              <li>Recorded as recovery, not locator healing</li>
+            </ol>
+          </button>
+          <button class="branch protect" type="button" aria-pressed="false" data-branch="protect">
+            <h3 style="color:var(--red)">Product / system issue</h3>
+            <ol>
+              <li>Do not heal</li>
+              <li>Report the original failure</li>
+              <li>Preserve the exception and capture evidence</li>
+              <li>Route to RCA</li>
+            </ol>
+          </button>
+        </div>
+        <div class="example" id="branch-example">An id that moved from loginButton to a new attribute is an element change. Score the candidate. Do not assume it.</div>
+      </section>
+
+      <section id="heal">
+        <p class="kicker">08 · Mechanism 1</p>
+        <h2>True healing is the same logical element in a new form.</h2>
+        <div class="grid-3">
+          <div>
+            <p class="group-h blue">Attributes</p>
+            <div class="tokens">
+              <span class="tok">ID</span><span class="tok">Name</span><span class="tok">Class</span>
+              <span class="tok">data-*</span><span class="tok">CSS selector</span><span class="tok">XPath</span>
+            </div>
+          </div>
+          <div>
+            <p class="group-h teal">Structure</p>
+            <div class="tokens">
+              <span class="tok">DOM movement</span><span class="tok">Parent</span><span class="tok">Ancestor</span>
+              <span class="tok">Wrapper</span><span class="tok">Restructure</span><span class="tok">Neighbors</span>
+            </div>
+          </div>
+          <div>
+            <p class="group-h gold">Meaning</p>
+            <div class="tokens">
+              <span class="tok">Text</span><span class="tok">ARIA</span><span class="tok">Accessible name</span>
+              <span class="tok">Component</span><span class="tok">Dynamic attributes</span>
+            </div>
+          </div>
+        </div>
+        <p class="pull">These are valid healing candidates. A removed or forbidden action is not.</p>
+      </section>
+
+      <section id="identity">
+        <p class="kicker">09 · Logical identity</p>
+        <h2>The control can be redesigned and still be the same action.</h2>
+        <p class="lede">A traditional locator for the first button is completely invalid against the second. QHARE compares business identity, not the markup string.</p>
+        <div class="screens">
+          <figure class="browser">
+            <figcaption class="chrome">Previous · login form</figcaption>
+            <div class="screen">
+              <div class="field-label">Password</div>
+              <div class="field" aria-hidden="true"></div>
+              <button class="btn-old" type="button">Login</button>
+              <div class="rel">Relationship · below password</div>
+              <div class="meta-line">id="loginButton" · class="primary-btn"</div>
+            </div>
+          </figure>
+          <figure class="browser">
+            <figcaption class="chrome">Current candidate · login form</figcaption>
+            <div class="screen">
+              <div class="field-label">Password</div>
+              <div class="field" aria-hidden="true"></div>
+              <div>
+                <button class="btn-new" type="button" aria-label="Sign In">Continue</button>
+              </div>
+              <div class="rel">Relationship · still below password</div>
+              <div class="meta-line">data-testid="authenticate" · aria-label="Sign In"</div>
+            </div>
+          </figure>
+        </div>
+        <div class="panel" style="margin-top:1rem;padding:0;overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Signal</th><th>Previous element</th><th>Current candidate</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Role</td><td class="match">Button</td><td class="match">Button</td></tr>
+              <tr><td>Text</td><td>Login</td><td class="shift">Continue</td></tr>
+              <tr><td>Context</td><td class="match">Login form</td><td class="match">Login form</td></tr>
+              <tr><td>Relationship</td><td class="match">Below password</td><td class="match">Below password</td></tr>
+              <tr><td>Intent</td><td>Submit credentials</td><td class="shift">Authentication</td></tr>
+              <tr><td>Accessible name</td><td>Not exposed</td><td class="shift">Sign In</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Show the markup QHARE is comparing</summary>
+          <div class="grid-2" style="margin-top:0.7rem">
+            <pre>&lt;button id="loginButton"
+        class="primary-btn"&gt;
+    Login
+&lt;/button&gt;</pre>
+            <pre>&lt;div class="actions"&gt;
+  &lt;app-button
+      data-testid="authenticate"
+      aria-label="Sign In"&gt;
+    Continue
+  &lt;/app-button&gt;
+&lt;/div&gt;</pre>
+          </div>
+        </details>
+      </section>
+
+      <section id="signals">
+        <p class="kicker">10 · Multi-signal healing</p>
+        <h2>No single matcher is allowed to decide.</h2>
+        <p class="lede">Candidate identification combines attributes, meaning, accessibility, structure, neighbors, history, and visual evidence when the other signals are thin.</p>
+        <div class="signal-map">
+          <div class="sig"><b>Attributes</b>ID, name, class, type, data-testid</div>
+          <div class="sig"><b>Semantics</b>Visible text, meaning, intent</div>
+          <div class="sig"><b>Accessibility</b>Role, accessible name, ARIA</div>
+          <div class="sig"><b>Structure</b>DOM, parents, ancestors</div>
+          <div class="sig"><b>Context</b>Neighbors and relative relationships</div>
+          <div class="sig"><b>History</b>Earlier representations of the same element</div>
+          <div class="sig"><b>Visual</b>Used where required, not as the only vote</div>
+          <div class="sig score"><b>Confidence</b>The decision input. Not one signal in isolation.</div>
+        </div>
+      </section>
+
+      <section id="confidence">
+        <p class="kicker">11 · Confidence policy</p>
+        <h2>Policy decides. Proximity does not.</h2>
+        <p class="lede">Select a candidate. The component breakdown belongs to the leading example only — the source does not publish a component split for the other two.</p>
+        <div class="grid-2">
+          <div class="cand" role="group" aria-label="Candidates">
+            <button type="button" aria-pressed="true" data-score="96">
+              <span style="font-family:var(--mono);font-size:0.86rem">[data-testid='authenticate']</span>
+              <b>96%</b>
+              <div class="meter go"><span style="--w:96%"></span></div>
+            </button>
+            <button type="button" aria-pressed="false" data-score="89">
+              <span style="font-family:var(--mono);font-size:0.86rem">button[type='submit']</span>
+              <b>89%</b>
+              <div class="meter go"><span style="--w:89%"></span></div>
+            </button>
+            <button type="button" aria-pressed="false" data-score="84">
+              <span style="font-family:var(--mono);font-size:0.86rem">button:has-text('Continue')</span>
+              <b>84%</b>
+              <div class="meter go"><span style="--w:84%"></span></div>
+            </button>
+          </div>
+          <div class="panel" id="breakdown">
+            <h3>Leading candidate · 96%</h3>
+            <div class="comp"><span>Semantic similarity</span><div class="meter go"><span style="--w:98%;background:var(--teal)"></span></div><b>98</b></div>
+            <div class="comp"><span>Accessibility</span><div class="meter go"><span style="--w:100%;background:var(--teal)"></span></div><b>100</b></div>
+            <div class="comp"><span>Historical similarity</span><div class="meter go"><span style="--w:96%;background:var(--teal)"></span></div><b>96</b></div>
+            <div class="comp"><span>Structural similarity</span><div class="meter go"><span style="--w:92%;background:var(--teal)"></span></div><b>92</b></div>
+            <div class="comp"><span>Neighbor context</span><div class="meter go"><span style="--w:91%;background:var(--teal)"></span></div><b>91</b></div>
+            <div class="comp"><span>Attribute similarity</span><div class="meter go"><span style="--w:87%;background:var(--teal)"></span></div><b>87</b></div>
+            <div class="comp"><span><b>Overall</b></span><div class="meter go"><span style="--w:96%"></span></div><b>96</b></div>
+          </div>
+        </div>
+        <div class="policy" aria-label="Confidence policy outcomes">
+          <div style="background:var(--green)">Auto-heal</div>
+          <div style="background:var(--teal)">Heal with warning</div>
+          <div style="background:var(--blue)">Request review</div>
+          <div style="background:var(--gold)">Suggest</div>
+          <div style="background:var(--red)">Reject</div>
+        </div>
+        <p class="note">The same score can land in any of those five outcomes. The cut is project policy, not a fixed percentage published here. Mode in the current configuration is <code>AUTO_HEAL</code>.</p>
+      </section>
+
+      <section id="native">
+        <p class="kicker">12 · Framework-native recovery</p>
+        <h2>The core names the element. The adapter writes the locator.</h2>
+        <div class="panel" style="background:var(--navy);color:white;margin-bottom:0.8rem">
+          <div class="label" style="color:#e0a23a">Shared logical identity</div>
+          <div class="grid-3" style="margin-top:0.6rem">
+            <div><div class="label">Role</div><p class="bigq" style="font-size:1.6rem">button</p></div>
+            <div><div class="label">Accessible name</div><p class="bigq" style="font-size:1.6rem">Sign In</p></div>
+            <div><div class="label">Intent</div><p class="bigq" style="font-size:1.6rem">Authentication</p></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Playwright</h3>
+            <pre>page.getByRole('button', { name: 'Sign In' })</pre>
+          </div>
+          <div class="panel">
+            <h3>Selenium</h3>
+            <p style="margin:0.4rem 0 0">An appropriate <code>By</code> strategy for the same identity. The intelligence does not force every framework onto XPath.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="sync">
+        <p class="kicker">13 · Mechanism 2</p>
+        <h2>A correct locator that is not ready is synchronization.</h2>
+        <pre>await page.getByRole('button', { name: 'Login' }).click();</pre>
+        <p>The locator is right. The button appears a few seconds later. Generating another locator would solve the wrong problem. QHARE classifies this as synchronization / element state.</p>
+        <div class="flow" aria-label="Synchronization recovery steps">
+          <div class="step teal">Wait</div><span class="join">→</span>
+          <div class="step teal">Re-query</div><span class="join">→</span>
+          <div class="step teal">DOM stability</div><span class="join">→</span>
+          <div class="step teal">Visibility</div><span class="join">→</span>
+          <div class="step teal">Actionable</div><span class="join">→</span>
+          <div class="step teal">Retry</div>
+        </div>
+        <div class="grid-2" style="margin-top:0.8rem">
+          <div class="lane"><strong>RECORD AS</strong><span style="font-family:var(--mono)">SYNCHRONIZATION_RECOVERY</span></div>
+          <div class="lane bad"><strong>DO NOT RECORD AS</strong><span style="font-family:var(--mono)">LOCATOR_HEALING</span></div>
+        </div>
+      </section>
+
+      <section id="runtime">
+        <p class="kicker">14 · Mechanism 3</p>
+        <h2>When the page state is wrong, restore the state.</h2>
+        <p class="lede">The Orders locator can be completely correct. Walk the scene: the expected journey, the modal that blocks it, and the controlled recovery.</p>
+        <div class="scene">
+          <div class="seg" role="group" aria-label="Runtime scene">
+            <button type="button" data-scene="expected" aria-pressed="true">Expected · Login → Dashboard → Orders</button>
+            <button type="button" data-scene="actual" aria-pressed="false">Actual · What’s New modal blocks Orders</button>
+            <button type="button" data-scene="recovered" aria-pressed="false">After recovery · modal closed, retry Orders</button>
+          </div>
+          <div>
+            <div class="app" id="app-stage" data-state="expected">
+              <header class="appbar" id="app-title">Dashboard</header>
+              <div class="tiles">
+                <div class="tile"><b>Welcome</b><span class="muted">Signed in</span></div>
+                <div class="tile orders"><b>Orders</b><span class="muted" id="orders-note">Ready</span></div>
+              </div>
+              <div class="modal" id="whats-new">
+                <b>What’s New</b>
+                <p style="margin:0.4rem 0 0.8rem">An unexpected modal. Orders is behind it. The locator did not change.</p>
+                <button class="ghost-btn" type="button" style="background:#111;color:white">Close</button>
+              </div>
+            </div>
+            <p id="scene-copy" style="margin-top:0.6rem">Expected state is Dashboard, then Orders. Nothing is blocking the target.</p>
+          </div>
+        </div>
+        <div class="flow" style="margin-top:0.9rem" aria-label="Controlled recovery">
+          <div class="step teal">Detect modal</div><span class="join">→</span>
+          <div class="step teal">Safe recovery</div><span class="join">→</span>
+          <div class="step teal">Close modal</div><span class="join">→</span>
+          <div class="step teal">Verify dashboard</div><span class="join">→</span>
+          <div class="step teal">Retry the operation</div><span class="join">→</span>
+          <div class="step green">Continue</div>
+        </div>
+        <p class="note">Also in scope: cookie banners, popups, overlays, collapsed sections, session warnings, recoverable navigation deviations, iframe or context changes, and SPA state changes. This is <code>RUNTIME_RECOVERY</code>, not locator healing.</p>
+      </section>
+
+      <section id="recover">
+        <p class="kicker">15 · Recovery endpoint</p>
+        <h2>Finding an element and restoring state are different calls.</h2>
+        <div class="grid-2">
+          <div class="panel" style="background:var(--blue);color:white">
+            <div style="font-family:var(--mono)">POST /api/v1/heal</div>
+            <p class="bigq" style="font-size:1.45rem">Find a changed representation of the same logical element.</p>
+          </div>
+          <div class="panel" style="background:var(--teal);color:white">
+            <div style="font-family:var(--mono)">POST /api/v1/recover</div>
+            <p class="bigq" style="font-size:1.45rem">Return the application to a state where the original step can run.</p>
+          </div>
+        </div>
+        <div class="flow" style="margin-top:0.8rem">
+          <div class="step ghost">Lookup failed</div><span class="join">→</span>
+          <div class="step blue">Heal attempt</div><span class="join">→</span>
+          <div class="step red">Unresolved</div><span class="join">→</span>
+          <div class="step teal">Recovery evaluation</div><span class="join">→</span>
+          <div class="step teal">POST /recover</div><span class="join">→</span>
+          <div class="step teal">Restore state</div><span class="join">→</span>
+          <div class="step green">Retry original locator</div>
+        </div>
+      </section>
+
+      <section id="donot">
+        <p class="kicker">16 · Mechanism 4</p>
+        <h2>Refuse the substitute when the failure may be the defect.</h2>
+        <div class="grid-2">
+          <article class="panel" style="border-top:5px solid var(--red)">
+            <h3 style="color:var(--red)">Authorization boundary</h3>
+            <p>A standard user must not be allowed to delete another user’s account.</p>
+            <p>If the application unexpectedly exposes <b>Delete Account</b>, QHARE must not find a similar control and let the test continue.</p>
+            <p class="pull">That exposure may be the defect.</p>
+          </article>
+          <article class="panel" style="border-top:5px solid var(--red)">
+            <h3 style="color:var(--red)">Removed critical action</h3>
+            <p><b>Approve Payment</b> has been removed because of an application defect.</p>
+            <p>QHARE must not substitute <b>Submit</b> because the control looks similar.</p>
+            <p class="pull">A passing step would hide the defect.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="guard">
+        <p class="kicker">17 · Do-not-heal guardrail</p>
+        <h2>Knowing when not to heal is part of the engine.</h2>
+        <div class="grid-2">
+          <div>
+            <p class="group-h" style="color:var(--red)">Product, access, and environment</p>
+            <div class="tokens">
+              <span class="tok">Application defect</span>
+              <span class="tok">Business validation failure</span>
+              <span class="tok">Authentication failure</span>
+              <span class="tok">Authorization failure</span>
+              <span class="tok">Wrong permissions</span>
+              <span class="tok">Incorrect test data</span>
+              <span class="tok">Backend or API failure</span>
+              <span class="tok">Network failure</span>
+              <span class="tok">Infrastructure failure</span>
+            </div>
+          </div>
+          <div>
+            <p class="group-h" style="color:var(--red)">Decision quality and safety</p>
+            <div class="tokens">
+              <span class="tok">Wrong page or navigation</span>
+              <span class="tok">Feature intentionally removed</span>
+              <span class="tok">Ambiguous candidate</span>
+              <span class="tok">Insufficient confidence</span>
+              <span class="tok">Unsafe or destructive action</span>
+            </div>
+          </div>
+        </div>
+        <div class="flow" style="margin-top:0.9rem">
+          <div class="step red">Do not heal</div><span class="join">→</span>
+          <div class="step">Preserve the original failure</div><span class="join">→</span>
+          <div class="step">Capture evidence</div><span class="join">→</span>
+          <div class="step blue">RCA / Command Center</div>
+        </div>
+      </section>
+
+      <section id="validate">
+        <p class="kicker">18 · Outcome validation</p>
+        <h2>A click on a replacement is not a successful heal.</h2>
+        <div class="flow">
+          <div class="step red">Locator failed</div><span class="join">→</span>
+          <div class="step blue">Candidate found</div><span class="join">→</span>
+          <div class="step blue">Confidence 96%</div><span class="join">→</span>
+          <div class="step blue">Candidate used</div><span class="join">→</span>
+          <div class="step">Credentials submitted</div>
+        </div>
+        <p style="text-align:center;font-weight:750;margin:0.9rem 0">Did the dashboard load?</p>
+        <div class="grid-2">
+          <div class="step green">Yes → accept the healing</div>
+          <div class="step red">No → reject the healing</div>
+        </div>
+        <p class="pull">This is the protection against a false-positive heal.</p>
+      </section>
+
+      <section id="telemetry">
+        <p class="kicker">20 · Telemetry follows the step</p>
+        <h2>“Found something” is not “the step succeeded.”</h2>
+        <p class="lede">In the current integration, QHARE telemetry is finalized after the corresponding Reqnroll step passes. A failed step is not treated as a validated success.</p>
+        <div class="flow">
+          <div class="step blue">QHARE intervention</div><span class="join">→</span>
+          <div class="step">Test operation</div><span class="join">→</span>
+          <div class="step">Reqnroll step</div>
+        </div>
+        <div class="grid-2" style="margin-top:0.8rem">
+          <div class="lane"><strong>PASS</strong>Confirm the outcome.</div>
+          <div class="lane bad"><strong>FAIL</strong>Do not treat it as validated success.</div>
+        </div>
+      </section>
+
+      <section id="history">
+        <p class="kicker">19 · Element history</p>
+        <h2>Trust the signals that stay stable.</h2>
+        <div class="grid-2">
+          <ol class="timeline">
+            <li>
+              <div class="dotcol"><div class="dot"></div><div class="stem"></div></div>
+              <b>V1</b><span>id = login</span>
+            </li>
+            <li>
+              <div class="dotcol"><div class="dot"></div><div class="stem"></div></div>
+              <b>V2</b><span>id = loginButton</span>
+            </li>
+            <li>
+              <div class="dotcol"><div class="dot"></div><div class="stem"></div></div>
+              <b>V3</b><span>data-testid = authenticate</span>
+            </li>
+            <li>
+              <div class="dotcol"><div class="dot now"></div></div>
+              <b>V4</b><span>role = button<br>aria-label = Sign In</span>
+            </li>
+          </ol>
+          <div id="stability">
+            <div class="comp"><span>Role</span><div class="meter"><span style="--w:100%;background:var(--green)"></span></div><b>100%</b></div>
+            <div class="comp"><span>Form context</span><div class="meter"><span style="--w:99%;background:var(--green)"></span></div><b>99%</b></div>
+            <div class="comp"><span>type = submit</span><div class="meter"><span style="--w:98%;background:var(--green)"></span></div><b>98%</b></div>
+            <div class="comp"><span>Relative position</span><div class="meter"><span style="--w:96%"></span></div><b>96%</b></div>
+            <div class="comp"><span>Text</span><div class="meter"><span style="--w:72%;background:var(--gold)"></span></div><b>72%</b></div>
+            <div class="comp"><span>ID</span><div class="meter"><span style="--w:43%;background:#c2612c"></span></div><b>43%</b></div>
+            <div class="comp"><span>CSS class</span><div class="meter"><span style="--w:19%;background:var(--red)"></span></div><b>19%</b></div>
+          </div>
+        </div>
+        <p class="pull">Later healing should place more trust in role, form context, and position than in id or class.</p>
+      </section>
+
+      <section id="maturity">
+        <p class="kicker">22 · Healing maturity</p>
+        <h2>Seven levels, and a guardrail that stays on.</h2>
+        <p class="lede">Select a level. L0 and L1 are the shared baseline — framework waits, and conventional attribute healing. The QHARE design range is L2 through L6. Do-not-heal is not a level you graduate out of.</p>
+        <div class="grid-2">
+          <div class="levels" id="level-list" role="listbox" aria-label="Resilience levels"></div>
+          <div class="panel detail" id="level-detail"></div>
+        </div>
+        <p class="note">Use this as a visual model of scope. It is not a claim that every other product lacks every capability above L1. Validate a named product before saying what it cannot do.</p>
+      </section>
+
+      <section id="models">
+        <p class="kicker">23 · Traditional pattern vs QHARE</p>
+        <h2>The difference is the scope of the response.</h2>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Locator repair</h3>
+            <div class="pipe">
+              <div class="step ghost">Locator fails</div>
+              <div class="down">▼</div>
+              <div class="step ghost">Find a similar element</div>
+              <div class="down">▼</div>
+              <div class="step ghost">Generate or select a locator</div>
+              <div class="down">▼</div>
+              <div class="step ghost">Retry</div>
+              <div class="down">▼</div>
+              <div class="step ghost">Continue</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Failure-aware resilience</h3>
+            <div class="pipe">
+              <div class="step">Operation fails</div>
+              <div class="down">▼</div>
+              <div class="step">Understand the failure</div>
+              <div class="down">▼</div>
+              <div class="step">Classify the cause</div>
+              <div class="down">▼</div>
+              <div class="step blue">Is healing appropriate?</div>
+            </div>
+            <div class="flow" style="margin-top:0.6rem">
+              <div class="step blue">Heal<small>Score and risk-check</small></div>
+              <div class="step teal">Recover<small>Restore state</small></div>
+              <div class="step red">Do not heal<small>RCA, keep the failure</small></div>
+            </div>
+            <p class="note">Heal and recover then validate, continue, and learn. Do-not-heal preserves the original failure.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="compare">
+        <p class="kicker">24 · Capability frame</p>
+        <h2>Compare a pattern, then check any named product.</h2>
+        <p class="lede">Use this when placing QHARE alongside a solution such as Healenium or Healwright. The middle column describes conventional locator self-healing. It is not an audit of a current product release.</p>
+        <input class="search" id="cmp-filter" type="search" placeholder="Filter dimensions" aria-label="Filter comparison dimensions">
+        <div class="panel" style="padding:0;overflow:auto">
+          <table id="cmp">
+            <thead>
+              <tr><th>Dimension</th><th>Conventional locator self-healing</th><th>QHARE direction</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Native locator retry</td><td>Yes</td><td class="qh">Yes</td></tr>
+              <tr><td>Attribute-based matching</td><td>Common</td><td class="qh">Yes</td></tr>
+              <tr><td>Locator replacement</td><td>Core capability</td><td class="qh">Yes, when appropriate</td></tr>
+              <tr><td>DOM structural reasoning</td><td>Varies</td><td class="qh">Multi-signal design</td></tr>
+              <tr><td>Semantic element identity</td><td>Varies</td><td class="qh">Core design principle</td></tr>
+              <tr><td>Accessibility signals</td><td>Varies</td><td class="qh">First-class signal</td></tr>
+              <tr><td>Historical element learning</td><td>Varies</td><td class="qh">Element evolution model</td></tr>
+              <tr><td>Confidence scoring</td><td>Varies</td><td class="qh">Explicit decision mechanism</td></tr>
+              <tr><td>Candidate explainability</td><td>Varies</td><td class="qh">Evidence-based</td></tr>
+              <tr><td>Failure classification</td><td>Often outside locator healing</td><td class="qh">Core architecture</td></tr>
+              <tr><td>Synchronization recovery</td><td>Usually the framework’s job</td><td class="qh">Explicitly classified and recovered</td></tr>
+              <tr><td>Runtime-state recovery</td><td>Typically a separate concern</td><td class="qh">Resilience layer</td></tr>
+              <tr><td>Do-not-heal decision</td><td>Varies</td><td class="qh">Explicit guardrail</td></tr>
+              <tr><td>Risk-aware healing</td><td>Varies</td><td class="qh">Designed into policy</td></tr>
+              <tr><td>Post-action validation</td><td>Varies</td><td class="qh">Required for trusted healing</td></tr>
+              <tr><td>Flakiness intelligence</td><td>Usually separate</td><td class="qh">QHARE L6</td></tr>
+              <tr><td>Automated quarantine</td><td>Usually separate</td><td class="qh">Reliability capability</td></tr>
+              <tr><td>Cross-framework intelligence</td><td>Product-dependent</td><td class="qh">Common core + adapters</td></tr>
+              <tr><td>Central observability</td><td>Product-dependent</td><td class="qh">QHARE Command Center</td></tr>
+              <tr><td>RCA correlation</td><td>Often external</td><td class="qh">Integrated direction</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Validate the latest capabilities of each external product before turning the middle column into a named claim.</p>
+      </section>
+
+      <section id="pillars">
+        <p class="kicker">25 · Four pillars</p>
+        <h2>Heal, recover, protect, learn.</h2>
+        <p class="lede">Select a pillar. Together they are the executive picture of the architecture: element intelligence on top, three disciplines underneath, one resilience outcome.</p>
+        <div class="pillars" role="group" aria-label="QHARE pillars">
+          <button class="pillar heal" type="button" aria-pressed="true">
+            <span>Heal</span>
+            Repair genuine element changes.
+            <ul>
+              <li>Attributes, DOM, structure</li>
+              <li>Semantics and accessibility</li>
+              <li>Context</li>
+            </ul>
+          </button>
+          <button class="pillar recover" type="button" aria-pressed="false">
+            <span>Recover</span>
+            Restore recoverable execution conditions.
+            <ul>
+              <li>Synchronization</li>
+              <li>Popup, overlay, modal</li>
+              <li>Context and page state</li>
+            </ul>
+          </button>
+          <button class="pillar protect" type="button" aria-pressed="false">
+            <span>Protect</span>
+            Know when not to heal.
+            <ul>
+              <li>Product and business failure</li>
+              <li>Authentication and authorization</li>
+              <li>Test data, backend, infrastructure, unsafe actions</li>
+            </ul>
+          </button>
+          <button class="pillar learn" type="button" aria-pressed="false">
+            <span>Learn</span>
+            Improve what the engine trusts.
+            <ul>
+              <li>Element history and confidence</li>
+              <li>Telemetry, flakiness, RCA</li>
+              <li>Anomalies, quarantine, reliability trends</li>
+            </ul>
+          </button>
+        </div>
+        <div class="converge">
+          <b>ADAPTIVE TEST RESILIENCE</b>
+          <p class="bigq" style="font-size:1.55rem" id="pillar-line">Heal repairs the element. The other three keep that repair honest.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="close" id="close">
+      <div class="wrap">
+        <p class="kicker">From self-healing to self-resilient automation</p>
+        <h2>The locator broke is the old sentence.</h2>
+        <p class="bigq trad">“The locator broke. Find another locator.”</p>
+        <p class="bigq">“The automation failed. Understand why, determine whether intervention is appropriate, recover safely, validate the expected behavior, and learn from the outcome.”</p>
+        <div class="caps" style="margin-top:1.6rem">
+          <div><b>01 Failure awareness</b>Understand the problem before attempting recovery.</div>
+          <div><b>06 Post-recovery validation</b>Confirm the expected business outcome.</div>
+          <div><b>02 Element intelligence</b>Attributes, semantics, accessibility, structure, context, and history.</div>
+          <div><b>07 Historical learning</b>Learn which characteristics stay stable as the application evolves.</div>
+          <div><b>03 Confidence-based healing</b>Evidence and configurable thresholds, not blind substitution.</div>
+          <div><b>08 Reliability intelligence</b>Flakiness, RCA, anomaly detection, and quarantine.</div>
+          <div><b>04 Runtime recovery</b>State disruption is separate from a locator change.</div>
+          <div><b>09 Cross-framework architecture</b>One core. Framework-specific adapters.</div>
+          <div><b>05 Do-not-heal guardrails</b>Do not mask product, business, data, access, or infrastructure failures.</div>
+          <div><b>10 Central observability</b>Every healing, recovery, rejection, and confidence decision is visible in the QHARE Command Center.</div>
+        </div>
+        <p class="bigq" style="margin-top:1.8rem">QHARE is an adaptive test resilience and reliability engine.</p>
+        <footer class="site">Qualiframe · QHARE · discussion narrative</footer>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(function () {
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav a.item"));
+  var sections = navLinks.map(function (a) {
+    return document.querySelector(a.getAttribute("href"));
+  }).filter(Boolean);
+
+  var progress = document.getElementById("progress");
+  function onScroll() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + "%";
+    var current = sections[0];
+    sections.forEach(function (sec) {
+      if (sec.getBoundingClientRect().top < 140) current = sec;
+    });
+    navLinks.forEach(function (a) {
+      a.classList.toggle("active", a.getAttribute("href") === "#" + current.id);
+    });
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  function press(group, attr, value) {
+    group.forEach(function (el) {
+      el.setAttribute("aria-pressed", el.getAttribute(attr) === value ? "true" : "false");
+    });
+  }
+
+  document.querySelectorAll(".filters button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var filter = btn.getAttribute("data-filter");
+      press(Array.prototype.slice.call(document.querySelectorAll(".filters button")), "data-filter", filter);
+      document.querySelectorAll("[data-class]").forEach(function (li) {
+        li.classList.toggle("dim", filter !== "all" && li.getAttribute("data-class") !== filter);
+      });
+    });
+  });
+
+  var examples = {
+    heal: "An id that moved from loginButton to a new attribute is an element change. Score the candidate. Do not assume it.",
+    recover: "A Login button that appears several seconds later is the right element at the wrong moment. Wait. Do not mint a new locator.",
+    protect: "Approve Payment removed by a defect must not be replaced with Submit. Preserve the failure and send it to RCA."
+  };
+  document.querySelectorAll(".branch").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-branch");
+      press(Array.prototype.slice.call(document.querySelectorAll(".branch")), "data-branch", key);
+      document.getElementById("branch-example").textContent = examples[key];
+    });
+  });
+
+  document.querySelectorAll(".cand button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      press(Array.prototype.slice.call(document.querySelectorAll(".cand button")), "data-score", btn.getAttribute("data-score"));
+      var note = document.getElementById("breakdown").querySelector("h3");
+      var score = btn.getAttribute("data-score");
+      note.textContent = score === "96"
+        ? "Leading candidate · 96%"
+        : "Selected at " + score + "% · component split is published only for the 96% candidate";
+    });
+  });
+
+  var scenes = {
+    expected: {
+      title: "Dashboard",
+      orders: "Ready",
+      copy: "Expected state is Dashboard, then Orders. Nothing is blocking the target."
+    },
+    actual: {
+      title: "Dashboard + unexpected modal",
+      orders: "Blocked",
+      copy: "Actual state is Dashboard plus a What’s New modal. The Orders locator can still be correct."
+    },
+    recovered: {
+      title: "Dashboard · modal closed",
+      orders: "Retry original operation",
+      copy: "Controlled recovery closed the modal, verified the dashboard, and retries the original operation. Record RUNTIME_RECOVERY."
+    }
+  };
+  var stage = document.getElementById("app-stage");
+  document.querySelectorAll("[data-scene]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-scene");
+      press(Array.prototype.slice.call(document.querySelectorAll("[data-scene]")), "data-scene", key);
+      stage.className = "app " + (key === "actual" ? "actual" : key === "recovered" ? "recovered" : "");
+      document.getElementById("app-title").textContent = scenes[key].title;
+      document.getElementById("orders-note").textContent = scenes[key].orders;
+      document.getElementById("scene-copy").textContent = scenes[key].copy;
+    });
+  });
+
+  var levels = [
+    ["L0", "Native framework resilience", "Framework waits, retries, and actionability.", "Baseline", "28%"],
+    ["L1", "Attribute locator healing", "ID, name, class, CSS, and XPath.", "Baseline", "40%"],
+    ["L2", "Structural healing", "DOM movement, wrappers, and hierarchy changes.", "QHARE design", "52%"],
+    ["L3", "Semantic element healing", "Text, role, intent, accessibility, and component changes.", "QHARE design", "64%"],
+    ["L4", "Context healing", "iframe, Shadow DOM, SPA, and responsive variants.", "QHARE design", "76%"],
+    ["L5", "Runtime recovery", "Popup, overlay, and page-state disruption.", "QHARE design", "88%"],
+    ["L6", "Reliability intelligence", "Flakiness, RCA, anomaly detection, and quarantine.", "QHARE design", "100%"],
+    ["Guard", "Do-not-heal", "Protects against unsafe or incorrect recovery. Always on.", "Guardrail", "100%"]
+  ];
+  var list = document.getElementById("level-list");
+  var detail = document.getElementById("level-detail");
+  function showLevel(i) {
+    var row = levels[i];
+    detail.innerHTML = "<p class='label' style='color:var(--gold)'>" + row[3] + "</p><h3 style='text-transform:none;letter-spacing:0;font-family:var(--serif);font-size:1.6rem'>" + row[0] + " · " + row[1] + "</h3><p>" + row[2] + "</p>";
+    Array.prototype.forEach.call(list.children, function (b, idx) {
+      b.setAttribute("aria-current", idx === i ? "true" : "false");
+    });
+  }
+  levels.forEach(function (row, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("role", "option");
+    b.style.setProperty("--grow", row[4]);
+    b.style.setProperty("--tint", row[0] === "Guard" ? "#f8dede" : i < 2 ? "#e7e4dc" : "#d9e6f6");
+    b.innerHTML = "<b>" + row[0] + "</b><span>" + row[1] + "</span><span class='muted'>" + row[3] + "</span>";
+    b.addEventListener("click", function () { showLevel(i); });
+    list.appendChild(b);
+  });
+  showLevel(3);
+
+  var pillarLines = {
+    heal: "Heal repairs the element. The other three keep that repair honest.",
+    recover: "Recover puts the application back where the original step can run.",
+    protect: "Protect is the decision to leave a real failure visible.",
+    learn: "Learn reweights the signals that survive the next redesign."
+  };
+  document.querySelectorAll(".pillar").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.classList.contains("heal") ? "heal" : btn.classList.contains("recover") ? "recover" : btn.classList.contains("protect") ? "protect" : "learn";
+      document.querySelectorAll(".pillar").forEach(function (p) { p.setAttribute("aria-pressed", p === btn ? "true" : "false"); });
+      document.getElementById("pillar-line").textContent = pillarLines[key];
+    });
+  });
+
+  var filter = document.getElementById("cmp-filter");
+  filter.addEventListener("input", function () {
+    var q = filter.value.trim().toLowerCase();
+    document.querySelectorAll("#cmp tbody tr").forEach(function (tr) {
+      tr.classList.toggle("hidden", q && tr.textContent.toLowerCase().indexOf(q) === -1);
+    });
+  });
+
+  var meters = document.querySelectorAll("#stability .meter");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) e.target.classList.add("go");
+      });
+    }, { threshold: 0.4 });
+    meters.forEach(function (m) { io.observe(m); });
+  } else {
+    meters.forEach(function (m) { m.classList.add("go"); });
+  }
+})();
+</script>
+</body>
+</html>

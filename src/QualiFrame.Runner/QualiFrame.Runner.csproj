@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>$(QualiFrameTfms)</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- CLI host: Debug-only output keeps bin/ small (see Directory.Build.props). -->
+    <Configurations>Debug</Configurations>
+    <Platforms>AnyCPU</Platforms>
+    <!-- Disable Microsoft Testing Platform entry point generation since we have our own Program.Main -->
+    <IsTestProject>false</IsTestProject>
+    <DisableTestingPlatformEntryPoint>true</DisableTestingPlatformEntryPoint>
+    <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QualiFrame.Runner.Core\QualiFrame.Runner.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\QualiFrame.Framework\Configuration\appsettings.json" Link="Configuration\appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
